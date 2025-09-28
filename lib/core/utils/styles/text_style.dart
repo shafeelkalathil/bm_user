@@ -104,9 +104,25 @@ TextStyle textExtraBold3XContent14 = const TextStyle(
   letterSpacing: 0,
 );
 
+TextStyle textBoldContent16 = const TextStyle(
+  fontFamily: 'Metropolis',
+  fontWeight: FontWeight.w500,
+  fontSize: 16,
+  height: 1.0,
+  letterSpacing: 0,
+);
+
 TextStyle textExtraBoldContent16 = const TextStyle(
   fontFamily: 'Metropolis',
   fontWeight: FontWeight.w600,
+  fontSize: 16,
+  height: 1.0,
+  letterSpacing: 0,
+);
+
+TextStyle textBold2XContent16 = const TextStyle(
+  fontFamily: 'Metropolis',
+  fontWeight: FontWeight.w700,
   fontSize: 16,
   height: 1.0,
   letterSpacing: 0,
@@ -136,10 +152,34 @@ TextStyle textSemiContent20 = const TextStyle(
   letterSpacing: 0,
 );
 
+TextStyle textBoldContent20 = const TextStyle(
+  fontFamily: 'Metropolis',
+  fontWeight: FontWeight.w500,
+  fontSize: 20,
+  height: 1.0,
+  letterSpacing: 0,
+);
+
 TextStyle textExtraBoldContent20 = const TextStyle(
   fontFamily: 'Metropolis',
   fontWeight: FontWeight.w600,
   fontSize: 20,
+  height: 1.0,
+  letterSpacing: 0,
+);
+
+TextStyle textBoldContent24 = const TextStyle(
+  fontFamily: 'Metropolis',
+  fontWeight: FontWeight.w500,
+  fontSize: 24,
+  height: 1.0,
+  letterSpacing: 0,
+);
+
+TextStyle textBold2XContent24 = const TextStyle(
+  fontFamily: 'Metropolis',
+  fontWeight: FontWeight.w700,
+  fontSize: 24,
   height: 1.0,
   letterSpacing: 0,
 );

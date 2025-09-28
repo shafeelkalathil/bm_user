@@ -156,7 +156,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             children: const [
               HomeScreen(),
               CategoryScreen(),
-              OffersScreen(),
+              OfferScreen(),
               CartScreen(),
             ],
           ),

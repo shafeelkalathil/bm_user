@@ -7,6 +7,8 @@ class AssetConstants {
   static String comingSoon = 'assets/images/coming_soon.png';
   static String location = 'assets/icons/location.svg';
   static String search = 'assets/icons/search.svg';
+  static String searchWhite = 'assets/icons/search_white.svg';
+  static String nikeBlack = 'assets/icons/nike_logo_black.svg';
   static String path = 'assets/icons/path.svg';
   static String home = 'assets/icons/home.svg';
   static String categories = 'assets/icons/categories.svg';
@@ -56,6 +58,9 @@ class AssetConstants {
   static String courier = 'assets/images/courier.jpg';
   static String fertilizer = 'assets/images/fertilizer.jpg';
   static String pets = 'assets/images/pets.jpg';
+  static String sale50 = 'assets/images/sale50%.png';
+  static String brandOfDay = 'assets/images/brand_of_day.png';
+  static String popularBrand = 'assets/images/popular_brand.png';
   static String shapedLoginOrSignup =
       'assets/images/shaped_login_or_signup.svg';
 }

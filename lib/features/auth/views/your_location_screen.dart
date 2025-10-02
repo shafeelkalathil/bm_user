@@ -98,8 +98,7 @@
 //   }
 // }
 
-
-
+import 'package:bm_user/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -123,11 +122,13 @@ class YourLocationScreen extends StatefulWidget {
 }
 
 class _YourLocationScreenState extends State<YourLocationScreen> {
-
   Future<void> _handleAllowLocation() async {
     final locationProvider = Provider.of<LocationProvider>(context, listen: false);
 
     final success = await locationProvider.getCurrentLocation();
+    storage.setBool('isLoggedIn', true);
+    print(storage.get('isLoggedIn'));
+    print('object');
 
     if (success) {
       CustomToast.showSuccess(
@@ -138,11 +139,12 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
       // Add slight delay for better UX
       await Future.delayed(const Duration(milliseconds: 1000));
 
-      if (mounted) {
+      if (context.mounted) {
+        print('navigated');
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const BottomNavBar()),
-              (route) => false,
+          (route) => false,
         );
       }
     } else {
@@ -155,9 +157,7 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
   Future<void> _handleManualLocation() async {
     final result = await Navigator.push<Map<String, dynamic>>(
       context,
-      MaterialPageRoute(
-        builder: (context) => const LocationManuallyScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const LocationManuallyScreen()),
     );
 
     if (result != null) {
@@ -176,7 +176,7 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const BottomNavBar()),
-              (route) => false,
+          (route) => false,
         );
       }
     }
@@ -205,13 +205,8 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
                                 ? primary.shade300
                                 : primary.shade400,
                             child: locationProvider.isLoading
-                                ? SpinKitRipple(
-                              color: Colors.white,
-                              size: 80.0,
-                            )
-                                : Center(
-                              child: SvgPicture.asset(AssetConstants.location),
-                            ),
+                                ? SpinKitRipple(color: Colors.white, size: 80.0)
+                                : Center(child: SvgPicture.asset(AssetConstants.location)),
                           ),
                         ),
                         const SizedBox(height: 30),
@@ -219,9 +214,7 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
                         /// Title text
                         Text(
                           AppStringConstants.yourLocation,
-                          style: textExtraBold3XContent30.copyWith(
-                            color: primary.shade200,
-                          ),
+                          style: textExtraBold3XContent30.copyWith(color: primary.shade200),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 20),
@@ -229,17 +222,13 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
                         /// Description lines
                         Text(
                           AppStringConstants.yourLocationDescLine1,
-                          style: textBoldContent14.copyWith(
-                            color: primary.shade50,
-                          ),
+                          style: textBoldContent14.copyWith(color: primary.shade50),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 8),
                         Text(
                           AppStringConstants.yourLocationDescLine2,
-                          style: textBoldContent14.copyWith(
-                            color: primary.shade50,
-                          ),
+                          style: textBoldContent14.copyWith(color: primary.shade50),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 30),
@@ -281,27 +270,24 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
                           isTransparent: false,
                           child: locationProvider.isLoading
                               ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SpinKitThreeBounce(
-                                color: primary.shade300,
-                                size: 20.0,
-                              ),
-                              const SizedBox(width: 10),
-                              Text(
-                                'Getting Location...',
-                                style: textExtraBoldContent16.copyWith(
-                                  color: primary.shade300,
-                                ),
-                              ),
-                            ],
-                          )
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    SpinKitThreeBounce(color: primary.shade300, size: 20.0),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      'Getting Location...',
+                                      style: textExtraBoldContent16.copyWith(
+                                        color: primary.shade300,
+                                      ),
+                                    ),
+                                  ],
+                                )
                               : Text(
-                            AppStringConstants.allowLocationAccess,
-                            style: textExtraBoldContent16.copyWith(
-                              color: primary.shade300,
-                            ),
-                          ),
+                                  AppStringConstants.allowLocationAccess,
+                                  style: textExtraBoldContent16.copyWith(
+                                    color: primary.shade300,
+                                  ),
+                                ),
                         ),
                         const SizedBox(height: 15),
 
@@ -358,9 +344,7 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
                 if (locationProvider.isLoading)
                   Container(
                     color: Colors.black.withOpacity(0.3),
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+                    child: const Center(child: CircularProgressIndicator()),
                   ),
               ],
             ),

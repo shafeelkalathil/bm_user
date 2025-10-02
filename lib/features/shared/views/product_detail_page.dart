@@ -7,12 +7,9 @@ import '../../../core/utils/styles/text_style.dart';
 import '../models/product_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  final Product product;
+  final ProductModel product;
 
-  const ProductDetailsScreen({
-    super.key,
-    required this.product,
-  });
+  const ProductDetailsScreen({super.key, required this.product});
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -110,25 +107,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: Center(
                     child: currentImageIndex > 0
                         ? GestureDetector(
-                      onTap: () {
-                        _pageController.previousPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.chevron_left,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                    )
+                            onTap: () {
+                              _pageController.previousPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          )
                         : const SizedBox.shrink(),
                   ),
                 ),
@@ -139,25 +136,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   child: Center(
                     child: currentImageIndex < productImages.length - 1
                         ? GestureDetector(
-                      onTap: () {
-                        _pageController.nextPage(
-                          duration: const Duration(milliseconds: 300),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.chevron_right,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                      ),
-                    )
+                            onTap: () {
+                              _pageController.nextPage(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeInOut,
+                              );
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.5),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          )
                         : const SizedBox.shrink(),
                   ),
                 ),
@@ -177,15 +174,13 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         imageCount,
-            (index) => AnimatedContainer(
+        (index) => AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: index == currentImageIndex ? 24 : 8,
           height: 8,
           decoration: BoxDecoration(
-            color: index == currentImageIndex
-                ? primary.shade500
-                : primary.shade200,
+            color: index == currentImageIndex ? primary.shade500 : primary.shade200,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -200,9 +195,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         const SizedBox(height: 10),
         Text(
           widget.product.name,
-          style: textBold2XContent14.copyWith(
-            color: primary.shade800,
-          ),
+          style: textBold2XContent14.copyWith(color: primary.shade800),
         ),
         const SizedBox(height: 8),
         Row(
@@ -256,9 +249,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               // Action section (Add button or Quantity controls)
               Expanded(
                 flex: 2,
-                child: showQuantitySelector
-                    ? _buildQuantityControls()
-                    : _buildAddButton(),
+                child: showQuantitySelector ? _buildQuantityControls() : _buildAddButton(),
               ),
             ],
           ),
@@ -348,9 +339,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           onPressed: quantity > 1
               ? () => setState(() => quantity--)
               : () => setState(() {
-            showQuantitySelector = false;
-            quantity = 1;
-          }),
+                  showQuantitySelector = false;
+                  quantity = 1;
+                }),
         ),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 12),
@@ -369,10 +360,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
         ),
-        _buildQuantityButton(
-          icon: Icons.add,
-          onPressed: () => setState(() => quantity++),
-        ),
+        _buildQuantityButton(icon: Icons.add, onPressed: () => setState(() => quantity++)),
       ],
     );
   }
@@ -390,7 +378,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           runSpacing: 8,
           children: List.generate(
             widget.product.variants.length,
-                (index) => _buildVariantOption(index),
+            (index) => _buildVariantOption(index),
           ),
         ),
         const SizedBox(height: 15),
@@ -447,20 +435,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   Widget _buildSelectedVariantPrice() {
     return Row(
       children: [
-        Text(
-          'Selected: ',
-          style: TextStyle(
-            fontSize: 14,
-            color: primary.shade800,
-          ),
-        ),
+        Text('Selected: ', style: TextStyle(fontSize: 14, color: primary.shade800)),
         Text(
           '₹${selectedVariant.price.toInt()}',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: primary.shade500,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: primary.shade500),
         ),
         if (selectedVariant.hasDiscount) ...[
           const SizedBox(width: 8),
@@ -477,10 +455,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget _buildQuantityButton({
-    required IconData icon,
-    required VoidCallback? onPressed,
-  }) {
+  Widget _buildQuantityButton({required IconData icon, required VoidCallback? onPressed}) {
     return Container(
       width: 36,
       height: 36,
@@ -507,19 +482,15 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 30,),
+        SizedBox(height: 30),
         Text(
           'Product Description',
-          style: textExtraBoldContent12.copyWith(
-            color: primary.shade800,
-          ),
+          style: textExtraBoldContent12.copyWith(color: primary.shade800),
         ),
         const SizedBox(height: 12),
         Text(
           widget.product.description,
-          style: textSemiContent12.copyWith(
-            color: primary.shade50,
-          ),
+          style: textSemiContent12.copyWith(color: primary.shade50),
         ),
       ],
     );

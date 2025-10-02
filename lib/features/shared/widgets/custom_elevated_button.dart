@@ -9,12 +9,15 @@ class CustomElevatedButton extends StatelessWidget {
     this.width,
     this.height,
     required this.isTransparent,
-    this.borderColor, this.borderRadius,
+    this.borderColor,
+    this.padding = const EdgeInsets.all(0),
+    this.borderRadius,
   });
 
+  final EdgeInsetsGeometry? padding;
   final VoidCallback? onPressed;
   final Widget child;
-  final double? width, height,borderRadius;
+  final double? width, height, borderRadius;
   final bool isTransparent;
   final Color? borderColor;
 
@@ -26,13 +29,14 @@ class CustomElevatedButton extends StatelessWidget {
       child: ElevatedButton(
         style: isTransparent
             ? ElevatedButton.styleFrom(
+          minimumSize: Size(double.infinity, 60),
                 backgroundColor: primary.shade300,
                 foregroundColor: primary.shade500,
                 side: BorderSide(color: borderColor ?? primary.shade500, width: 2), // border
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(borderRadius ?? 50),
                 ),
-          padding: EdgeInsets.zero
+                padding: padding,
               )
             : null,
         onPressed: onPressed,

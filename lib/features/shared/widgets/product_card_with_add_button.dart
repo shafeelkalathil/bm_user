@@ -1,57 +1,97 @@
+import 'package:bm_user/core/common_variables.dart';
+import 'package:bm_user/core/constants/app_string_constants.dart';
 import 'package:bm_user/core/utils/extensions/size_extension.dart';
+import 'package:bm_user/features/cart/controller/cart_controller.dart';
+import 'package:bm_user/features/shared/models/cart_model.dart';
 import 'package:bm_user/features/shared/views/product_detail_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import '../../../core/constants/asset_constants.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/utils/styles/text_style.dart';
 import '../models/product_model.dart';
 import 'custom_elevated_button.dart';
 
-class ProductCardWithAddButton extends StatelessWidget {
+class ProductCardWithAddButton extends ConsumerStatefulWidget {
   const ProductCardWithAddButton({
     super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.subTitle,
-    required this.offerPer,
-    required this.price,
-    required this.time,
-    required this.itemQty,
+    // required this.imageUrl,
+    // required this.title,
+    // required this.subTitle,
+    // required this.offerPer,
+    // required this.price,
+    // required this.time,
+    // required this.itemQty,
     this.onTap,
     this.onAddPressed,
     this.isBg = false,
     required this.productWithOption,
+    required this.singleProduct,
     this.productId, // Add this parameter for unique hero tags
   });
 
-  final String imageUrl;
-  final String title;
-  final String subTitle;
-  final String offerPer;
-  final String price;
-  final String time;
-  final String itemQty;
+  final ProductModel singleProduct;
+
+  // final String imageUrl;
+  // final String title;
+  // final String subTitle;
+  // final String offerPer;
+  // final String price;
+  // final String time;
+  // final String itemQty;
   final VoidCallback? onTap;
   final VoidCallback? onAddPressed;
   final bool isBg;
   final bool productWithOption;
-  final String? productId; // For unique hero tags
+  final String? productId;
+
+  @override
+  ConsumerState<ProductCardWithAddButton> createState() => _ProductCardWithAddButtonState();
+}
+
+class _ProductCardWithAddButtonState extends ConsumerState<ProductCardWithAddButton> {
+  // For unique hero tags
+  final grossItemQuantity = StateProvider((ref) => 0);
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (var a in widget.singleProduct.variants) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (widget.singleProduct.variants.length > 1) {
+          ref.watch(grossItemQuantity.notifier).state += a.quantity;
+        } else {
+          ref.watch(grossItemQuantity.notifier).state += widget.singleProduct.quantity;
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Generate unique hero tag
-    final String heroTag = productId ?? 'product_${title.hashCode}_${imageUrl.hashCode}';
+    final String heroTag =
+        widget.productId ?? 'product_${widget.singleProduct.name.hashCode}_${widget.singleProduct.name.hashCode}';
 
-    Product product = Product(
-      id: heroTag, // Use the same ID for consistency
-      name: title, // Use actual title from parameters
+    ProductModel product = ProductModel(
+      quantity: widget.singleProduct.quantity,
+      id: heroTag,
+      // Use the same ID for consistency
+      name: widget.singleProduct.name,
+      // Use actual title from parameters
       brand: 'Ashirvad',
-      description: 'Ashirvad 100% Atta with Multigrain goodness. The goodness of six grains in one pack, wheat, soya, chana, makka, bajra, jau & psyllium husk, making your roti more nutritious.',
-      imageUrl: imageUrl, // Use actual imageUrl from parameters
+      description:
+          'Ashirvad 100% Atta with Multigrain goodness. The goodness of six grains in one pack, wheat, soya, chana, makka, bajra, jau & psyllium husk, making your roti more nutritious.',
+      imageUrl: widget.singleProduct.imageUrl,
+      // Use actual imageUrl from parameters
       rating: 4.5,
       reviewCount: 128,
-      hasMultipleOptions: productWithOption, // Use the actual parameter
+      hasMultipleOptions: widget.productWithOption,
+      // Use the actual parameter
       category: 'Flour & Grains',
       features: [
         'Made from 100% whole wheat',
@@ -60,45 +100,55 @@ class ProductCardWithAddButton extends StatelessWidget {
         'No artificial preservatives',
         'Perfect for making soft rotis',
       ],
-      variants: productWithOption ? [
-        ProductVariant(
-          id: '${heroTag}-500g',
-          size: '500',
-          unit: 'g',
-          price: double.tryParse(price) ?? 332,
-          originalPrice: (double.tryParse(price) ?? 332) * 1.1,
-          discountPercentage: int.tryParse(offerPer) ?? 5,
-        ),
-        ProductVariant(
-          id: '${heroTag}-1kg',
-          size: '1',
-          unit: 'kg',
-          price: (double.tryParse(price) ?? 332) * 1.8,
-          originalPrice: (double.tryParse(price) ?? 332) * 2.0,
-          discountPercentage: int.tryParse(offerPer) ?? 8,
-        ),
-        ProductVariant(
-          id: '${heroTag}-5kg',
-          size: '5',
-          unit: 'kg',
-          price: (double.tryParse(price) ?? 332) * 5.4,
-          originalPrice: (double.tryParse(price) ?? 332) * 6.0,
-          discountPercentage: int.tryParse(offerPer) ?? 10,
-        ),
-      ] : [
-        ProductVariant(
-          id: '${heroTag}-single',
-          size: itemQty.replaceAll(RegExp(r'[^0-9]'), ''),
-          unit: itemQty.replaceAll(RegExp(r'[0-9]'), '').trim(),
-          price: double.tryParse(price) ?? 332,
-          originalPrice: (double.tryParse(price) ?? 332) * 1.1,
-          discountPercentage: int.tryParse(offerPer) ?? 5,
-        ),
-      ],
+      variants: widget.productWithOption
+          ? [
+              ProductVariant(
+                quantity: widget.singleProduct.quantity,
+                imageUrl: widget.singleProduct.variants.first.imageUrl,
+                id: '${heroTag}-500g',
+                size: '500',
+                unit: 'g',
+                price: double.tryParse(widget.singleProduct.variants.first.price.toString()) ?? 332,
+                originalPrice: (double.tryParse(widget.singleProduct.variants.first.originalPrice.toString()) ?? 332) * 1.1,
+                discountPercentage: int.tryParse(widget.singleProduct.variants.first.discountPercentage.toString()) ?? 5,
+              ),
+              ProductVariant(
+                quantity: widget.singleProduct.quantity,
+                imageUrl: widget.singleProduct.variants.first.imageUrl,
+                id: '${heroTag}-1kg',
+                size: '1',
+                unit: 'kg',
+                price: (double.tryParse(widget.singleProduct.variants.first.price.toString()) ?? 332) * 1.8,
+                originalPrice: (double.tryParse(widget.singleProduct.variants.first.originalPrice.toString()) ?? 332) * 2.0,
+                discountPercentage: int.tryParse(widget.singleProduct.variants.first.discountPercentage.toString()) ?? 8,
+              ),
+              ProductVariant(
+                quantity: widget.singleProduct.quantity,
+                imageUrl: widget.singleProduct.variants.first.imageUrl,
+                id: '${heroTag}-5kg',
+                size: '5',
+                unit: 'kg',
+                price: (double.tryParse(widget.singleProduct.variants.first.price.toString()) ?? 332) * 5.4,
+                originalPrice: (double.tryParse(widget.singleProduct.variants.first.originalPrice.toString()) ?? 332) * 6.0,
+                discountPercentage: int.tryParse(widget.singleProduct.variants.first.discountPercentage.toString()) ?? 10,
+              ),
+            ]
+          : [
+              ProductVariant(
+                quantity: widget.singleProduct.quantity,
+                imageUrl: widget.singleProduct.variants.first.imageUrl,
+                id: '${heroTag}-single',
+                size: widget.singleProduct.quantity.toString().replaceAll(RegExp(r'[^0-9]'), ''),
+                unit: widget.singleProduct.quantity.toString().replaceAll(RegExp(r'[0-9]'), '').trim(),
+                price: double.tryParse(widget.singleProduct.variants.first.price.toString()) ?? 332,
+                originalPrice: (double.tryParse(widget.singleProduct.variants.first.originalPrice.toString()) ?? 332) * 1.1,
+                discountPercentage: int.tryParse(widget.singleProduct.variants.first.discountPercentage.toString()) ?? 5,
+              ),
+            ],
     );
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -106,9 +156,7 @@ class ProductCardWithAddButton extends StatelessWidget {
           Container(
             width: context.screenWidth * 0.35,
             height: context.screenWidth * 0.35,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
             child: Stack(
               children: [
                 // Hero widget wrapping the image
@@ -117,14 +165,10 @@ class ProductCardWithAddButton extends StatelessWidget {
                     Navigator.push(
                       context,
                       PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            ProductDetailsScreen(product: product),
+                        pageBuilder: (context, animation, secondaryAnimation) => ProductDetailsScreen(product: product),
                         transitionDuration: const Duration(milliseconds: 300),
                         transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                            opacity: animation,
-                            child: child,
-                          );
+                          return FadeTransition(opacity: animation, child: child);
                         },
                       ),
                     );
@@ -136,30 +180,19 @@ class ProductCardWithAddButton extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(14),
                         child: Image.network(
-                          imageUrl,
+                          widget.singleProduct.imageUrl,
                           width: double.infinity,
                           height: double.infinity,
                           fit: BoxFit.cover,
-                          loadingBuilder: (context, child, progress) =>
-                          progress == null
+                          loadingBuilder: (context, child, progress) => progress == null
                               ? child
                               : Container(
-                            decoration: BoxDecoration(
-                              color: primary.shade100,
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
+                                  decoration: BoxDecoration(color: primary.shade100, borderRadius: BorderRadius.circular(14)),
+                                  child: const Center(child: CircularProgressIndicator()),
+                                ),
                           errorBuilder: (_, __, ___) => Container(
-                            decoration: BoxDecoration(
-                              color: primary.shade100,
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: const Center(
-                              child: Icon(Icons.error, color: Colors.red),
-                            ),
+                            decoration: BoxDecoration(color: primary.shade100, borderRadius: BorderRadius.circular(14)),
+                            child: const Center(child: Icon(Icons.error, color: Colors.red)),
                           ),
                         ),
                       ),
@@ -168,59 +201,86 @@ class ProductCardWithAddButton extends StatelessWidget {
                 ),
 
                 // ADD button positioned on top of the hero
-                productWithOption
+                widget.productWithOption
                     ? Positioned(
-                  bottom: 5,
-                  right: 5,
-                  child: Hero(
-                    tag: 'add_button_$heroTag', // Separate hero for add button
-                    child: CustomElevatedButton(
-                      width: 60,
-                      height: 28,
-                      onPressed: onAddPressed ??
-                              () { _showAddOptionsBottomSheet(context);},
-                      isTransparent: true,
-                      borderColor: Colors.transparent,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'ADD',
-                            style: textExtraBoldContent10.copyWith(
-                              color: primary.shade500,
+                        bottom: 5,
+                        right: 5,
+                        child: Hero(
+                          tag: 'add_button_$heroTag', // Separate hero for add button
+                          child: CustomElevatedButton(
+                            width: 60,
+                            height: 28,
+                            onPressed:
+                                widget.onAddPressed ??
+                                () {
+                                  if (widget.singleProduct.variants.length > 1) {
+                                    _showAddOptionsBottomSheet(
+                                      context: context,
+                                      variants: widget.singleProduct.variants,
+                                      ref: ref,
+                                    );
+                                  } else {
+                                    if (cartProducts.isNotEmpty) {
+                                      cartProducts.map((e) {
+                                        if (e.productName == widget.singleProduct.name &&
+                                            e.size == widget.singleProduct.variants.first.size) {
+                                          e.copyWith(quantity: e.quantity + 1);
+                                        } else {
+                                          cartProducts.add(
+                                            CartModel(
+                                              productImage: widget.singleProduct.imageUrl,
+                                              productName: widget.singleProduct.name,
+                                              productPrice: widget.singleProduct.variants.first.price,
+                                              productDescription: widget.singleProduct.description,
+                                              unit: widget.singleProduct.variants.first.unit,
+                                              size: widget.singleProduct.variants.first.size,
+                                              quantity: 1,
+                                            ),
+                                          );
+                                        }
+                                      }).toList();
+                                    } else {
+                                      cartProducts.add(
+                                        CartModel(
+                                          productImage: widget.singleProduct.imageUrl,
+                                          productName: widget.singleProduct.name,
+                                          productPrice: widget.singleProduct.variants.first.price,
+                                          productDescription: widget.singleProduct.description,
+                                          unit: widget.singleProduct.variants.first.unit,
+                                          size: widget.singleProduct.variants.first.size,
+                                          quantity: 1,
+                                        ),
+                                      );
+                                    }
+                                  }
+                                },
+                            isTransparent: true,
+                            borderColor: Colors.transparent,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(AppStringConstants.add, style: textExtraBoldContent10.copyWith(color: primary.shade500)),
+                                Text('options', style: textSemiContent8.copyWith(color: primary.shade500)),
+                              ],
                             ),
                           ),
-                          Text(
-                            'options',
-                            style: textSemiContent8.copyWith(
-                              color: primary.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                        ),
+                      )
                     : Positioned(
-                  bottom: 5,
-                  right: 5,
-                  child: Hero(
-                    tag: 'add_button_$heroTag', // Separate hero for add button
-                    child: CustomElevatedButton(
-                      width: 50,
-                      height: 22,
-                      onPressed: onAddPressed,
-                      isTransparent: true,
-                      borderColor: Colors.transparent,
-                      child: Text(
-                        'ADD',
-                        style: textExtraBoldContent10.copyWith(
-                          color: primary.shade500,
+                        bottom: 5,
+                        right: 5,
+                        child: Hero(
+                          tag: 'add_button_$heroTag', // Separate hero for add button
+                          child: CustomElevatedButton(
+                            width: 50,
+                            height: 22,
+                            onPressed: widget.onAddPressed,
+                            isTransparent: true,
+                            borderColor: Colors.transparent,
+                            child: Text('ADD', style: textExtraBoldContent10.copyWith(color: primary.shade500)),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -233,8 +293,8 @@ class ProductCardWithAddButton extends StatelessWidget {
             child: Row(
               spacing: 3,
               children: [
-                _buildTag(itemQty, 45),
-                Expanded(child: _buildTag(title, context.screenWidth * 0.35 - 55)),
+                _buildTag(ref.watch(grossItemQuantity) == 0 ? '1' : ref.watch(grossItemQuantity).toString(), 45),
+                Expanded(child: _buildTag(widget.singleProduct.name, context.screenWidth * 0.35 - 55)),
               ],
             ),
           ),
@@ -245,10 +305,8 @@ class ProductCardWithAddButton extends StatelessWidget {
           SizedBox(
             width: context.screenWidth * 0.35,
             child: Text(
-              subTitle,
-              style: textSemiContent10.copyWith(
-                color: isBg ? primary.shade300 : primary.shade500,
-              ),
+              widget.singleProduct.description,
+              style: textSemiContent10.copyWith(color: widget.isBg ? primary.shade300 : primary.shade500),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -258,9 +316,9 @@ class ProductCardWithAddButton extends StatelessWidget {
           SizedBox(
             width: context.screenWidth * 0.35,
             child: Text(
-              '$offerPer% off',
+              '${widget.singleProduct.variants.first.discountPercentage}% off',
               style: textSemiContent8.copyWith(
-                color: isBg ? primary.shade300 : primary.shade500,
+                color: widget.isBg ? primary.shade300 : primary.shade500,
                 fontWeight: FontWeight.w600,
                 fontSize: 7,
               ),
@@ -271,10 +329,8 @@ class ProductCardWithAddButton extends StatelessWidget {
           SizedBox(
             width: context.screenWidth * 0.35,
             child: Text(
-              '₹$price MRP',
-              style: textSemiContent10.copyWith(
-                color: isBg ? primary.shade300 : primary.shade500,
-              ),
+              '₹${widget.singleProduct.variants.first.price} MRP',
+              style: textSemiContent10.copyWith(color: widget.isBg ? primary.shade300 : primary.shade500),
             ),
           ),
 
@@ -286,9 +342,9 @@ class ProductCardWithAddButton extends StatelessWidget {
                 SvgPicture.asset(AssetConstants.timer, width: 10),
                 const SizedBox(width: 4),
                 Text(
-                  time,
+                  '8',
                   style: textSemiContent8.copyWith(
-                    color: isBg ? primary.shade300 : primary.shade500,
+                    color: widget.isBg ? primary.shade300 : primary.shade500,
                     fontWeight: FontWeight.w600,
                     fontSize: 6,
                   ),
@@ -307,14 +363,12 @@ class ProductCardWithAddButton extends StatelessWidget {
       height: 20,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
-        color: isBg ? primary.shade300 : primary.shade700,
+        color: widget.isBg ? primary.shade300 : primary.shade700,
       ),
       child: Center(
         child: Text(
-          text,
-          style: textExtraBoldContent10.copyWith(
-            color: primary.shade500,
-          ),
+          text.toString(),
+          style: textExtraBoldContent10.copyWith(color: primary.shade500),
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -322,91 +376,155 @@ class ProductCardWithAddButton extends StatelessWidget {
     );
   }
 
-  void _showAddOptionsBottomSheet(BuildContext context) {
+  //-- bottom sheet
+  void _showAddOptionsBottomSheet({
+    required BuildContext context,
+    required List<ProductVariant> variants,
+    required WidgetRef ref,
+  }) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
+          height: context.screenHeight * 0.4,
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Handle bar
-              Center(
-                child: Container(
-                  width: context.screenWidth*0.5,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: primary.shade500,
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(50),
-                      bottomRight: Radius.circular(50),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Title
-              ProductCard(
-                imageUrl:'https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0',
-                title: 'Ashirvad 0% malda',
-                subtitle: '100% mp atta',
-                price: 525,
-                originalPrice: 700,
+          child: ListView.builder(
+            itemCount: variants.length,
+            itemBuilder: (context, index) {
+              return ProductCard(
+                productVariant: widget.singleProduct.variants[index],
+                quantity: variants[index].quantity.toString(),
+                imageUrl: variants[index].imageUrl,
+                title: widget.singleProduct.name,
+                subtitle: widget.singleProduct.description,
+                price: variants[index].price,
+                originalPrice: variants[index].originalPrice,
                 onAddToCart: () {
-                  print('Product added to cart');
+                  if (cartProducts.isEmpty) {
+                    cartProducts.add(
+                      CartModel(
+                        productImage: widget.singleProduct.imageUrl,
+                        productName: widget.singleProduct.name,
+                        productPrice: widget.singleProduct.variants[index].price,
+                        productDescription: widget.singleProduct.description,
+                        unit: widget.singleProduct.variants[index].unit,
+                        size: widget.singleProduct.variants[index].size,
+                        quantity: 1,
+                      ),
+                    );
+                  } else {
+                    final indexx = cartProducts.indexWhere(
+                      (element) => element.productName == widget.singleProduct.name && element.size == variants[index].size,
+                    );
+                    if (indexx != -1) {
+                      var updated = cartProducts[index].copyWith(quantity: cartProducts[index].quantity + 1);
+                      cartProducts[index] = updated;
+                    } else {
+                      print('not same');
+
+                      cartProducts.add(
+                        CartModel(
+                          productImage: widget.singleProduct.imageUrl,
+                          productName: widget.singleProduct.name,
+                          productPrice: widget.singleProduct.variants[index].price,
+                          productDescription: widget.singleProduct.description,
+                          unit: widget.singleProduct.variants[index].unit,
+                          size: widget.singleProduct.variants[index].size,
+                          quantity: 1,
+                        ),
+                      );
+                    }
+                  }
                 },
                 onQuantityChanged: (quantity) {
                   print('Quantity changed: $quantity');
                 },
-              ),
-              ProductCard(
-                imageUrl:'https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0',
-                title: 'Ashirvad 0% malda',
-                subtitle: '100% mp atta',
-                price: 525,
-                originalPrice: 700,
-                onAddToCart: () {
-                  print('Product added to cart');
-                },
-                onQuantityChanged: (quantity) {
-                  print('Quantity changed: $quantity');
-                },
-              ),
-
-
-
-              // Bottom padding for safe area
-              SizedBox(height: MediaQuery.of(context).padding.bottom),
-            ],
+              );
+            },
           ),
+
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   crossAxisAlignment: CrossAxisAlignment.start,
+          //   children: [
+          //     // Handle bar
+          //     Center(
+          //       child: Container(
+          //         width: context.screenWidth * 0.5,
+          //         height: 4,
+          //         decoration: BoxDecoration(
+          //           color: primary.shade500,
+          //           borderRadius: BorderRadius.only(
+          //             bottomLeft: Radius.circular(50),
+          //             bottomRight: Radius.circular(50),
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //     const SizedBox(height: 20),
+
+          //     // Title
+          //     ProductCard(
+          //       imageUrl:
+          //           'https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0',
+          //       title: 'Ashirvad 0% malda',
+          //       subtitle: '100% mp atta',
+          //       price: 525,
+          //       originalPrice: 700,
+          //       onAddToCart: () {
+          //         // cartProducts.add();
+          //         print('Product added to cart');
+          //       },
+          //       onQuantityChanged: (quantity) {
+          //         print('Quantity changed: $quantity');
+          //       },
+          //     ),
+          //     ProductCard(
+          //       imageUrl:
+          //           'https://plus.unsplash.com/premium_photo-1675252369719-dd52bc69c3df?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0',
+          //       title: 'Ashirvad 0% malda',
+          //       subtitle: '100% mp atta',
+          //       price: 525,
+          //       originalPrice: 700,
+          //       onAddToCart: () {
+          //         print('Product added to cart');
+          //       },
+          //       onQuantityChanged: (quantity) {
+          //         print('Quantity changed: $quantity');
+          //       },
+          //     ),
+
+          //     // Bottom padding for safe area
+          //     SizedBox(height: MediaQuery.of(context).padding.bottom),
+          //   ],
+          // ),
         );
       },
     );
   }
 }
 
-
-class ProductCard extends StatefulWidget {
+//-- bottom sheet product card
+class ProductCard extends ConsumerStatefulWidget {
+  final ProductVariant productVariant;
   final String imageUrl;
   final String title;
   final String subtitle;
   final double price;
+  final String quantity;
   final double? originalPrice;
   final VoidCallback? onAddToCart;
+
   final Function(int quantity)? onQuantityChanged;
 
   const ProductCard({
+    required this.quantity,
+    required this.productVariant,
     super.key,
     required this.imageUrl,
     required this.title,
@@ -418,11 +536,10 @@ class ProductCard extends StatefulWidget {
   });
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
+  ConsumerState<ProductCard> createState() => _ProductCardState();
 }
 
-class _ProductCardState extends State<ProductCard> {
-  int quantity = 0;
+class _ProductCardState extends ConsumerState<ProductCard> {
   bool showQuantityControls = false;
 
   @override
@@ -433,14 +550,7 @@ class _ProductCardState extends State<ProductCard> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Row(
         children: [
@@ -450,10 +560,7 @@ class _ProductCardState extends State<ProductCard> {
             height: 60,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              image: DecorationImage(
-                image: NetworkImage(widget.imageUrl),
-                fit: BoxFit.cover,
-              ),
+              image: DecorationImage(image: NetworkImage(widget.imageUrl), fit: BoxFit.cover),
             ),
           ),
 
@@ -467,23 +574,32 @@ class _ProductCardState extends State<ProductCard> {
               children: [
                 Text(
                   widget.title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.black87,
-                  ),
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   widget.subtitle,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      'Qty : 0',
+                      style: textBoldContent16.copyWith(color: primary.shade500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      widget.quantity,
+                      style: textBoldContent16.copyWith(color: primary.shade500),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -502,21 +618,13 @@ class _ProductCardState extends State<ProductCard> {
                 children: [
                   Text(
                     '₹${widget.price.toInt()}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                    ),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black87),
                   ),
                   if (widget.originalPrice != null) ...[
                     const SizedBox(width: 4),
                     Text(
                       'MRP ₹${widget.originalPrice!.toInt()}',
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[500],
-                        decoration: TextDecoration.lineThrough,
-                      ),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[500], decoration: TextDecoration.lineThrough),
                     ),
                   ],
                 ],
@@ -526,8 +634,8 @@ class _ProductCardState extends State<ProductCard> {
 
               // Action Button/Quantity Controls
               showQuantityControls
-                  ? _buildQuantityControls()
-                  : _buildAddButton(),
+                  ? _buildQuantityControls(productVariant: widget.productVariant, name: widget.title)
+                  : _buildAddButton(ref: ref),
             ],
           ),
         ],
@@ -535,7 +643,9 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  Widget _buildAddButton() {
+  //-- add button in bottom sheet
+
+  Widget _buildAddButton({required WidgetRef ref}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       decoration: BoxDecoration(
@@ -550,68 +660,67 @@ class _ProductCardState extends State<ProductCard> {
         onTap: () {
           setState(() {
             showQuantityControls = true;
-            quantity = 1;
+            ref.watch(addingToCartQuantity.notifier).state = 1;
           });
           widget.onAddToCart?.call();
           widget.onQuantityChanged?.call(1);
         },
         child: const Text(
           'ADD',
-          style: TextStyle(
-            color: Color(0xFF1A237E),
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.5,
-          ),
+          style: TextStyle(color: Color(0xFF1A237E), fontSize: 12, fontWeight: FontWeight.w600, letterSpacing: 0.5),
         ),
       ),
     );
   }
 
-  Widget _buildQuantityControls() {
+  //-- quantity controlls
+  Widget _buildQuantityControls({required ProductVariant productVariant, required String name}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1A237E),
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: const Color(0xFF1A237E), borderRadius: BorderRadius.circular(20)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          //-- quantity minus button
           _buildQuantityButton(
             icon: Icons.remove,
             onPressed: () {
-              setState(() {
-                if (quantity > 1) {
-                  quantity--;
-                } else {
-                  showQuantityControls = false;
-                  quantity = 0;
-                }
-              });
-              widget.onQuantityChanged?.call(quantity);
+              if (ref.watch(addingToCartQuantity) > 0) {
+                ref.watch(addingToCartQuantity.notifier).state--;
+                cartProducts.map((e) {
+                  if (e.productName == name && e.size == widget.productVariant.size) {
+                    e.quantity = e.quantity - 1;
+                    print(e.quantity);
+                  }
+                }).toList();
+              } else {
+                cartProducts = [];
+              }
             },
           ),
-
+          //-- quantity text
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 12),
             child: Text(
-              '$quantity',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
+              ref.watch(addingToCartQuantity).toString(),
+              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
             ),
           ),
 
+          //-- plus button
           _buildQuantityButton(
             icon: Icons.add,
             onPressed: () {
-              setState(() {
-                quantity++;
-              });
-              widget.onQuantityChanged?.call(quantity);
+              if (productVariant.quantity > ref.watch(addingToCartQuantity)) {
+                ref.watch(addingToCartQuantity.notifier).state++;
+                cartProducts.map((e) {
+                  if (e.productName == name && e.size == widget.productVariant.size) {
+                    e.quantity = e.quantity + 1;
+                  }
+                }).toList();
+              }
+
+              widget.onQuantityChanged?.call(ref.watch(addingToCartQuantity));
             },
           ),
         ],
@@ -619,24 +728,14 @@ class _ProductCardState extends State<ProductCard> {
     );
   }
 
-  Widget _buildQuantityButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
+  Widget _buildQuantityButton({required IconData icon, required VoidCallback onPressed}) {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
         width: 24,
         height: 24,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: const Color(0xFF1A237E),
-          size: 16,
-        ),
+        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+        child: Icon(icon, color: const Color(0xFF1A237E), size: 16),
       ),
     );
   }

@@ -30,7 +30,8 @@ class LocationService {
       if (permission == LocationPermission.deniedForever) {
         return LocationResult(
           success: false,
-          message: 'Location permissions are permanently denied. Please enable them in app settings.',
+          message:
+              'Location permissions are permanently denied. Please enable them in app settings.',
           needsSettingsOpen: true,
         );
       }
@@ -60,7 +61,6 @@ class LocationService {
         address: address,
         placemark: placemarks.isNotEmpty ? placemarks[0] : null,
       );
-
     } catch (e) {
       return LocationResult(
         success: false,

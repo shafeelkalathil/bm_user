@@ -1,8 +1,8 @@
 class AppStringConstants {
   static String authPageDescLine1 = 'Your one-stop shop for all things DIY!';
-  static String authPageDescLine2 =
-      'Better mend with a click of your fingertips!';
+  static String authPageDescLine2 = 'Better mend with a click of your fingertips!';
   static String loginOrSignUp = 'Log in or Sign up';
+  static String add = 'Add';
   static String enterMobileNumber = 'Enter mobile number ';
   static String continueText = 'Continue';
   static String login = 'Login';

@@ -1,3 +1,6 @@
+import 'package:bm_user/core/common_variables.dart';
+import 'package:bm_user/features/cart/view/cart_history.dart';
+import 'package:bm_user/features/cart/view/view_cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -53,9 +56,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         content: const Text(
           'Are you sure you want to exit the app?\nAny unsaved changes will be lost.',
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -75,9 +76,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
             child: const Text('Exit App'),
           ),
@@ -106,10 +105,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           notchStyle: NotchStyle.square,
           onTap: _onItemTapped,
           items: [
-            _buildBottomBarItem(
-              iconPath: AssetConstants.home,
-              label: AppStringConstants.home,
-            ),
+            _buildBottomBarItem(iconPath: AssetConstants.home, label: AppStringConstants.home),
             _buildBottomBarItem(
               iconPath: AssetConstants.categories,
               label: AppStringConstants.categories,
@@ -130,7 +126,10 @@ class _BottomNavBarState extends State<BottomNavBar> {
           shape: const CircleBorder(),
           backgroundColor: primary.shade500,
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const BrandOfTheDayScreen(),));
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const BrandOfTheDayScreen()),
+            );
           },
           child: CircleAvatar(
             backgroundColor: primary.shade500,
@@ -138,9 +137,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               child: Text(
                 'Better\nMend',
                 textAlign: TextAlign.center,
-                style: textBoldContent12.copyWith(
-                  color: primary.shade100,
-                ),
+                style: textBoldContent12.copyWith(color: primary.shade100),
               ),
             ),
           ),
@@ -153,11 +150,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
           child: PageView(
             controller: _pageController,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              HomeScreen(),
-              CategoryScreen(),
-              OfferScreen(),
-              CartScreen(),
+            children: [
+              const HomeScreen(),
+              const CategoryScreen(),
+              const OfferScreen(),
+              cartProducts.isNotEmpty ? ViewCartScreen() : CartHistory(),
             ],
           ),
         ),
@@ -166,18 +163,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
   }
 
   /// Helper to create a BottomBarItem with consistent styling.
-  BottomBarItem _buildBottomBarItem({
-    required String iconPath,
-    required String label,
-  }) {
+  BottomBarItem _buildBottomBarItem({required String iconPath, required String label}) {
     return BottomBarItem(
       icon: SvgPicture.asset(iconPath),
       selectedColor: primary.shade500,
       unSelectedColor: primary.shade100,
-      title: Text(
-        label,
-        style: textBoldContent12,
-      ),
+      title: Text(label, style: textBoldContent12),
     );
   }
 }

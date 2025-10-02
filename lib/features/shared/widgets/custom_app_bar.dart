@@ -23,6 +23,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final hasDrawer = Scaffold.of(context).hasDrawer;
     final canPop = Navigator.of(context).canPop();
     return AppBar(
+
       title: Text(title, style: textExtraBold3XContent24.copyWith(color: primary.shade200,fontSize: 25)),
       actions: [trailing ?? const SizedBox.shrink()],
       surfaceTintColor: Colors.transparent,

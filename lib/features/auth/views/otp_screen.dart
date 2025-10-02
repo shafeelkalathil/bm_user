@@ -10,10 +10,7 @@ import '../../shared/widgets/custom_otp_text_field.dart';
 class OtpScreen extends StatefulWidget {
   final String phoneNumber;
 
-  const OtpScreen({
-    super.key,
-    required this.phoneNumber,
-  });
+  const OtpScreen({super.key, required this.phoneNumber});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -44,10 +41,9 @@ class _OtpScreenState extends State<OtpScreen> {
       return;
     } else {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const YourLocationScreen(),
-          ));
+        context,
+        MaterialPageRoute(builder: (context) => const YourLocationScreen()),
+      );
     }
   }
 
@@ -76,10 +72,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       alignment: Alignment.centerLeft,
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          color: primary.shade200,
-                        ),
+                        icon: Icon(Icons.arrow_back_ios, color: primary.shade200),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -143,9 +136,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       isTransparent: false,
                       child: Text(
                         AppStringConstants.login,
-                        style: textExtraBoldContent16.copyWith(
-                          color: primary.shade300,
-                        ),
+                        style: textExtraBoldContent16.copyWith(color: primary.shade300),
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -156,16 +147,13 @@ class _OtpScreenState extends State<OtpScreen> {
                       children: [
                         Text(
                           AppStringConstants.notReceive,
-                          style: textBoldContent14.copyWith(
-                              color: primary.shade50),
+                          style: textBoldContent14.copyWith(color: primary.shade50),
                         ),
                         InkWell(
                           onTap: _handleResendOtp,
                           child: Text(
                             'Resend in ${30}s',
-                            style: textBold2XContent14.copyWith(
-                              color: primary.shade500,
-                            ),
+                            style: textBold2XContent14.copyWith(color: primary.shade500),
                           ),
                         ),
                       ],

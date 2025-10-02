@@ -40,9 +40,7 @@ class _ProductCardWithFavIconState extends State<ProductCardWithFavIcon> {
           Container(
             width: 120,
             height: 120,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-            ),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
             child: Stack(
               children: [
                 ClipRRect(
@@ -71,9 +69,7 @@ class _ProductCardWithFavIconState extends State<ProductCardWithFavIcon> {
                   child: GestureDetector(
                     onTap: toggleFavorite,
                     child: SvgPicture.asset(
-                      isFavorite
-                          ? AssetConstants.heartFill
-                          : AssetConstants.heart,
+                      isFavorite ? AssetConstants.heartFill : AssetConstants.heart,
                     ),
                   ),
                 ),
@@ -87,7 +83,7 @@ class _ProductCardWithFavIconState extends State<ProductCardWithFavIcon> {
               widget.title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style:textSemiContent10.copyWith(color: primary.shade200),
+              style: textSemiContent10.copyWith(color: primary.shade200),
             ),
           ),
           const SizedBox(height: 4),
@@ -97,14 +93,20 @@ class _ProductCardWithFavIconState extends State<ProductCardWithFavIcon> {
               spacing: 5,
               children: [
                 SvgPicture.asset(AssetConstants.star),
-                Text('4.7. 30-35 mins',style: textSemiContent8.copyWith(color: primary.shade200),)
+                Text(
+                  '4.7. 30-35 mins',
+                  style: textSemiContent8.copyWith(color: primary.shade200),
+                ),
               ],
             ),
           ),
           const SizedBox(height: 3),
           SizedBox(
             width: 120,
-            child: Text('Bakery, Dessert, Sweet',style: textSemiContent8.copyWith(color: primary.shade200,fontSize: 5),),
+            child: Text(
+              'Bakery, Dessert, Sweet',
+              style: textSemiContent8.copyWith(color: primary.shade200, fontSize: 5),
+            ),
           ),
         ],
       ),

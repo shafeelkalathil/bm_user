@@ -22,30 +22,33 @@ class BuildCategoryWidget extends StatelessWidget {
       AppStringConstants.workers,
       AppStringConstants.eService
     ];
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: List.generate(
-          categoryIcons.length,
-          (i) => CategoryIconWithTitle(
-                icon: categoryIcons[i],
-                label: categoryText[i],
-                onTap: () {
-                  if (i != 0) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              ComingSoonScreen(title: categoryText[i]),
-                        ));
-                  } else if (i == 0) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const DeliveryServiceScreen(),
-                        ));
-                  }
-                },
-              )),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: List.generate(
+            categoryIcons.length,
+            (i) => CategoryIconWithTitle(
+                  icon: categoryIcons[i],
+                  label: categoryText[i],
+                  onTap: () {
+                    if (i != 0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ComingSoonScreen(title: categoryText[i]),
+                          ));
+                    } else if (i == 0) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const DeliveryServiceScreen(),
+                          ));
+                    }
+                  },
+                )),
+      ),
     );
   }
 }

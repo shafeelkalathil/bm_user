@@ -1,5 +1,5 @@
-
 import 'package:bm_user/core/utils/extensions/size_extension.dart';
+import 'package:bm_user/features/shared/models/product_model.dart';
 import 'package:bm_user/features/shared/widgets/product_card_with_add_button.dart';
 import 'package:flutter/material.dart';
 import '../../../core/constants/asset_constants.dart';
@@ -88,7 +88,7 @@ import 'custom_elevated_button.dart';
 //               itemBuilder: (_, index) => ProductCardWithAddButton(
 //                 isBg: true,
 //                 imageUrl: products[index]['imageUrl']!,
-//                 title: products[index]['title']!,
+//                 title: products[index].productName,
 //                 price: '525',
 //                 time: '8 min',
 //                 subTitle: 'Ashirvad 0% maida, 100% mp atta',
@@ -106,7 +106,7 @@ import 'custom_elevated_button.dart';
 //               itemBuilder: (_, index) => ProductCardWithAddButton(
 //                 isBg: true,
 //                 imageUrl: products[index]['imageUrl']!,
-//                 title: products[index]['title']!,
+//                 title: products[index].productName,
 //                 price: '525',
 //                 time: '8 min',
 //                 subTitle: 'Ashirvad 0% maida, 100% mp atta',
@@ -144,9 +144,6 @@ import 'custom_elevated_button.dart';
 // }
 //
 
-
-
-
 class RecommendedProductSection extends StatelessWidget {
   const RecommendedProductSection({
     super.key,
@@ -155,7 +152,7 @@ class RecommendedProductSection extends StatelessWidget {
     this.isFullScreen = false,
   });
 
-  final List<Map<String, String>> products;
+  final List<ProductModel> products;
   final bool isSmaller, isFullScreen;
 
   @override
@@ -166,10 +163,7 @@ class RecommendedProductSection extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color(0xFFA064BA),
-            Color(0xFF672B83),
-          ],
+          colors: [Color(0xFFA064BA), Color(0xFF672B83)],
         ),
       ),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
@@ -184,7 +178,7 @@ class RecommendedProductSection extends StatelessWidget {
               children: [
                 const BrandLogoWithTriangleShape(
                   imageUrl:
-                  'https://eastern.in/wp-content/uploads/2016/09/cropped-logo-easternapp.png',
+                      'https://eastern.in/wp-content/uploads/2016/09/cropped-logo-easternapp.png',
                 ),
                 const SizedBox(width: 12),
                 Column(
@@ -192,15 +186,11 @@ class RecommendedProductSection extends StatelessWidget {
                   children: [
                     Text(
                       'Eastern Powder',
-                      style: textExtraBoldContent16.copyWith(
-                        color: primary.shade300,
-                      ),
+                      style: textExtraBoldContent16.copyWith(color: primary.shade300),
                     ),
                     Text(
                       'Recommended for\ntasty foods',
-                      style: textBoldContent14.copyWith(
-                        color: primary.shade300,
-                      ),
+                      style: textBoldContent14.copyWith(color: primary.shade300),
                     ),
                   ],
                 ),
@@ -219,20 +209,16 @@ class RecommendedProductSection extends StatelessWidget {
                   children: [
                     const BrandLogoWithTriangleShape(
                       imageUrl:
-                      'https://eastern.in/wp-content/uploads/2016/09/cropped-logo-easternapp.png',
+                          'https://eastern.in/wp-content/uploads/2016/09/cropped-logo-easternapp.png',
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Eastern Powder',
-                      style: textExtraBoldContent16.copyWith(
-                        color: primary.shade300,
-                      ),
+                      style: textExtraBoldContent16.copyWith(color: primary.shade300),
                     ),
                     Text(
                       'Recommended for\ntasty foods',
-                      style: textBoldContent14.copyWith(
-                        color: primary.shade300,
-                      ),
+                      style: textBoldContent14.copyWith(color: primary.shade300),
                     ),
                   ],
                 ),
@@ -244,7 +230,7 @@ class RecommendedProductSection extends StatelessWidget {
 
           /// Product list
           if (isFullScreen)
-          // Use Expanded + GridView
+            // Use Expanded + GridView
             Expanded(
               child: GridView.builder(
                 itemCount: products.length,
@@ -257,13 +243,14 @@ class RecommendedProductSection extends StatelessWidget {
                 ),
                 itemBuilder: (_, index) => ProductCardWithAddButton(
                   isBg: true,
-                  imageUrl: products[index]['imageUrl']!,
-                  title: products[index]['title']!,
-                  price: '525',
-                  time: '8 min',
-                  subTitle: 'Ashirvad 0% maida, 100% mp atta',
-                  offerPer: '12',
-                  itemQty: '1 kg',
+                  singleProduct: products[index],
+                  // imageUrl: products[index].imageUrl,
+                  // title: products[index].name,
+                  // price: products[index].variants[index].price.round.toString(),
+                  // time: '8 min',
+                  // subTitle: 'Ashirvad 0% maida, 100% mp atta',
+                  // offerPer: products[index].variants[index].discountPercentage.toString(),
+                  // itemQty: products[index].variants[index].unit.toString(),
                   onTap: () {},
                   productWithOption: true,
                 ),
@@ -277,14 +264,14 @@ class RecommendedProductSection extends StatelessWidget {
                 itemCount: products.length,
                 separatorBuilder: (_, __) => const SizedBox(width: 12),
                 itemBuilder: (_, index) => ProductCardWithAddButton(
-                  isBg: true,
-                  imageUrl: products[index]['imageUrl']!,
-                  title: products[index]['title']!,
-                  price: '525',
-                  time: '8 min',
-                  subTitle: 'Ashirvad 0% maida, 100% mp atta',
-                  offerPer: '12',
-                  itemQty: '1 kg',
+                  singleProduct: products[index],
+                  // imageUrl: products[index].imageUrl,
+                  // title: products[index].name,
+                  // price: products[index].variants[index].price.round.toString(),
+                  // time: '8 min',
+                  // subTitle: 'Ashirvad 0% maida, 100% mp atta',
+                  // offerPer: products[index].variants[index].discountPercentage.toString(),
+                  // itemQty: products[index].variants[index].unit.toString(),
                   onTap: () {},
                   productWithOption: true,
                 ),
@@ -306,15 +293,9 @@ class RecommendedProductSection extends StatelessWidget {
                 children: [
                   Text(
                     'See all products',
-                    style: textExtraBoldContent14.copyWith(
-                      color: primary.shade200,
-                    ),
+                    style: textExtraBoldContent14.copyWith(color: primary.shade200),
                   ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    color: primary.shade200,
-                    size: 16,
-                  ),
+                  Icon(Icons.arrow_forward_ios, color: primary.shade200, size: 16),
                 ],
               ),
             ),

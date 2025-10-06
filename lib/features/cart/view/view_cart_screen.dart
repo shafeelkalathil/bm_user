@@ -4,6 +4,8 @@ import 'package:bm_user/features/cart/view/widgets/elevated_box.dart';
 import 'package:bm_user/features/cart/view/widgets/elevated_icon_box.dart';
 import 'package:bm_user/features/cart/view/widgets/selectable_chip_row.dart';
 import 'package:bm_user/features/cart/view/widgets/slidetopay_button.dart';
+import 'package:bm_user/features/shared/models/cart_model.dart';
+import 'package:bm_user/features/shared/widgets/quantity_controlls.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +20,9 @@ import '../../shared/widgets/custom_elevated_button.dart';
 import '../../shared/widgets/product_card_with_add_button.dart';
 import '../../shared/widgets/section_title.dart';
 import '../../shared/widgets/shadow_container.dart';
+import '../controller/cart_controller.dart';
 import 'order_confirmation_screen.dart';
+final amountToPay = StateProvider((ref) => 0.0);
 
 class ViewCartScreen extends ConsumerStatefulWidget {
   const ViewCartScreen({super.key});
@@ -28,25 +32,26 @@ class ViewCartScreen extends ConsumerStatefulWidget {
 }
 
 class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
-
-
-  final amountToPay  = StateProvider((ref) => 0.0);
-
+  //-- variables
+  final grossItemQuantity = StateProvider((ref) => 0);
 
   @override
   void initState() {
-    // TODO: implement initState
+    // TODO: implement
+
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      for(var a in cartProducts){
+      ref.watch(amountToPay.notifier).state = 0;
+
+      for (var a in ref.watch(cartProducts)) {
         ref.watch(amountToPay.notifier).state += a.productPrice * a.quantity;
       }
-    },);
-
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+
     final products = [
       ProductModel(
         quantity: 8,
@@ -55,7 +60,6 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
             'https://images.unsplash.com/photo-1741520149938-4f08654780ef?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
         category: 'Snacks',
         hasMultipleOptions: true,
-
         id: '',
         brand: 'Lays',
         description: '',
@@ -253,12 +257,13 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
 
               //-- list of cart items
               ListView.separated(
-                itemCount: cartProducts.length,
+                itemCount: ref.watch(cartProducts).length,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
                 itemBuilder: (context, index) {
                   return ShadowContainer(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       spacing: 10,
                       children: [
                         //-- image of the product
@@ -266,72 +271,62 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
                           height: 55,
                           width: 55,
                           decoration: BoxDecoration(color: Colors.orange.shade50, borderRadius: BorderRadius.circular(12)),
-                          child: cartProducts[index].productImage.isEmpty
+                          child: ref.watch(cartProducts)[index].productImage.isEmpty
                               ? const Icon(Icons.shopping_basket, color: Colors.orange)
-                              : CachedNetworkImage(imageUrl: cartProducts[index].productImage),
+                              : CachedNetworkImage(imageUrl: ref.watch(cartProducts)[index].productImage),
                         ),
 
                         //-- product name and weight info
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            spacing: 10,
-                            children: [
-                              //--  product name
-                              Text(cartProducts[index].productName, style: textSemiContent14.copyWith(color: primary.shade200)),
-                              SizedBox(
-                                width: context.screenWidth * 0.35,
-                                child: Row(
-                                  spacing: 6,
-                                  children: [
-                                    //-- product weight
-                                    _buildTag(
-                                      text:
-                                          '${cartProducts[index].size} ${cartProducts[index].unit}',
-                                      width: 45,
-                                    ),
+                        Flexible(
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              spacing: 10,
+                              children: [
+                                //--  product name
+                                Text(ref.watch(cartProducts)[index].productName, style: textSemiContent14.copyWith(color: primary.shade200)),
+                                SizedBox(
+                                  width: context.screenWidth * 0.35,
+                                  child: Row(
+                                    spacing: 6,
+                                    children: [
+                                      //-- product weight
+                                      _buildTag(text: '${ref.watch(cartProducts)[index].size} ${ref.watch(cartProducts)[index].unit}', width: 45),
 
-                                    //-- product description
-                                    Expanded(
-                                      child: _buildTag(
-                                        text: cartProducts[index].productDescription,
-                                        width: context.screenWidth * 0.35 - 55,
+                                      //-- product description
+                                      Expanded(
+                                        child: _buildTag(
+                                          text: ref.watch(cartProducts)[index].productDescription,
+                                          width: context.screenWidth * 0.35 - 55,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
 
                         //-- product price and quantity
-                        Column(
-                          spacing: 10,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: context.screenWidth * 0.2,
-                              height: 25,
-                              decoration: BoxDecoration(color: primary.shade500, borderRadius: BorderRadius.circular(15)),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Icon(Icons.minimize, color: primary.shade300),
-                                  Text(
-                                    cartProducts[index].quantity.toString(),
-                                    style: textExtraBoldContent14.copyWith(color: primary.shade300),
+                        Expanded(
+                          child: SizedBox(
+                            height: context.screenHeight * 0.1,
+                            child: Column(
+                              spacing: 10,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(child: QuantityControls(productVariant: ref.watch(cartProducts)[index], name:ref.watch(cartProducts)[index].productName )),
+                                Expanded(
+                                  child: Text(
+                                    '₹${ref.watch(cartProducts)[index].productPrice}',
+                                    style: textBoldContent16.copyWith(color: primary.shade500),
                                   ),
-                                  Icon(Icons.add, color: primary.shade300),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                            Text(
-                              '₹${cartProducts[index].productPrice}',
-                              style: textSemiContent10.copyWith(color: primary.shade500),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
@@ -369,113 +364,112 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
               const SizedBox(height: 10),
 
               //-- notes and gift voucher section
-            Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    //-- notes or instruction and apply coupon section
-                    Expanded(
-                      child: SizedBox(
-                        width: context.screenWidth * 0.6,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: 15,
-                          children: [
-                            //-- instruction section
-                            ShadowContainer(
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(AssetConstants.notePadWithPen),
-                                  Text('Notes or instractions ', style: textSemiContent14.copyWith(color: primary.shade100)),
-                                ],
-                              ),
-                            ),
-
-                            //-- coupon section
-                            ShadowContainer(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('SAVINGS CORNER', style: textExtraBoldContent14.copyWith(color: primary.shade200)),
-
-                                  //-- apply coupon and arrow icon
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AssetConstants.coupon),
-                                      const SizedBox(width: 5),
-                                      Text('Apply coupon', style: textSemiContent14.copyWith(color: primary.shade200)),
-                                      const Spacer(),
-                                      Icon(Icons.arrow_forward_ios, color: primary.shade500),
-                                    ],
-                                  ),
-                                  const Divider(),
-
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(AssetConstants.coupon),
-                                      const SizedBox(width: 5),
-                                      SizedBox(
-                                        width: context.screenWidth * 0.25,
-                                        child: Text(
-                                          '₹16 saved on.......',
-                                          style: textSemiContent14.copyWith(color: primary.shade200),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      const Spacer(),
-                                      Icon(Icons.check, color: primary.shade500),
-                                      const SizedBox(width: 5),
-                                      Text('Applied', style: textSemiContent14.copyWith(color: primary.shade500)),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //-- notes or instruction and apply coupon section
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      spacing: 15,
+                      children: [
+                        //-- instruction section
+                        ShadowContainer(
+                          child: Row(
+                            children: [
+                              Flexible(child: SvgPicture.asset(AssetConstants.notePadWithPen)),
+                              Expanded(child: Padding(
+                                padding: const EdgeInsets.only(left: 3),
+                                child: Text('Notes or instractions ', style: textSemiContent14.copyWith(color: primary.shade100),softWrap: false,overflow: TextOverflow.ellipsis,),
+                              )),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
 
-                    //-- gift section
-                    ShadowContainer(
-                      padding: EdgeInsets.symmetric(horizontal: 15,vertical: 5),
-                      height: context.screenHeight * 0.205,
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          SvgPicture.asset(AssetConstants.gift, width: 55, height: 55, fit: BoxFit.cover),
-                          const SizedBox(height: 10),
-                          Text('Gift', style: textSemiContent14.copyWith(color: primary.shade200)),
-                          Text('your order', style: textSemiContent14.copyWith(color: primary.shade200)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                        //-- coupon section
+                        ShadowContainer(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('SAVINGS CORNER', style: textExtraBoldContent14.copyWith(color: primary.shade200),softWrap: false,),
 
+                              //-- apply coupon and arrow icon
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AssetConstants.coupon),
+                                  const SizedBox(width: 5),
+                                  Expanded(child: Text('Apply coupon', style: textSemiContent12.copyWith(color: primary.shade200),softWrap: false,)),
+                                  Expanded(child: Icon(Icons.arrow_forward_ios, color: primary.shade500)),
+                                ],
+                              ),
+                              const Divider(),
+
+                              Row(
+                                children: [
+                                  SvgPicture.asset(AssetConstants.coupon),
+                                  const SizedBox(width: 5),
+                                  Expanded(
+                                    child: SizedBox(
+                                      width: context.screenWidth * 0.25,
+                                      child: Text(
+                                        '₹16 saved on.......',
+                                        style: textSemiContent12.copyWith(color: primary.shade200),
+                                        maxLines: 1,
+                                        softWrap: false,
+                                      ),
+                                    ),
+                                  ),
+
+                                  Flexible(child: Icon(Icons.check, color: primary.shade500)),
+                                  const SizedBox(width: 5),
+                                  Expanded(child: Text('Applied', style: textSemiContent12.copyWith(color: primary.shade500),softWrap: false,)),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+
+                  //-- gift section
+                  ShadowContainer(
+                    height: context.screenHeight * 0.2,
+                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 10),
+                        SvgPicture.asset(AssetConstants.gift, width: 55, height: 55, fit: BoxFit.cover),
+                        const SizedBox(height: 10),
+                        Text('Gift', style: textSemiContent14.copyWith(color: primary.shade200)),
+                        Text('your order', style: textSemiContent14.copyWith(color: primary.shade200)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
 
               const SizedBox(height: 20),
 
               //-- give a tip section
               ShadowContainer(
+                height: context.screenHeight * 0.2,
                 width: context.screenWidth,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text('Give a tip', style: textExtraBoldContent16.copyWith(color: primary.shade200)),
-                          const SizedBox(height: 10),
-                          Text('Appreciate your delivery hero!', style: textSemiContent12.copyWith(color: primary.shade200)),
-                          Text('A small tip makes a big difference.', style: textSemiContent12.copyWith(color: primary.shade200)),
-                          Text('Thank you!', style: textSemiContent12.copyWith(color: primary.shade200)),
-                          const SizedBox(height: 10),
-                          const SelectableChipsRow(),
-                        ],
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(child: Text('Give a tip', style: textExtraBoldContent16.copyWith(color: primary.shade200),)),
+                        const SizedBox(height: 10),
+                        Expanded(child: Text('Appreciate your delivery hero!', style: textSemiContent12.copyWith(color: primary.shade200))),
+                        Expanded(child: Text('A small tip makes a big difference.', style: textSemiContent12.copyWith(color: primary.shade200))),
+                        Expanded(child: Text('Thank you!', style: textSemiContent12.copyWith(color: primary.shade200))),
+                        const SizedBox(height: 10),
+                        Expanded(child: const SelectableChipsRow()),
+                      ],
                     ),
                     Expanded(child: SvgPicture.asset(AssetConstants.deliveryPath)),
                   ],
@@ -496,7 +490,10 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(
                   deliveryInstructionsText.length,
-                  (i) => ElevatedIconBox(imageUrl: deliveryInstructionsIcon[i], label: deliveryInstructionsText[i]),
+                  (i) => Expanded(child: Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: ElevatedIconBox(imageUrl: deliveryInstructionsIcon[i], label: deliveryInstructionsText[i]),
+                  )),
                 ),
               ),
               const SizedBox(height: 20),
@@ -504,6 +501,8 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
                 price: ref.watch(amountToPay).toString(),
                 sliderColor: primary.shade300,
                 onSlideCompleted: () {
+                  ref.read(cartHistory).addAll(ref.read(cartProducts));
+                  ref.watch(cartProducts.notifier).state = [];
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderConfirmationScreen()));
                 },
               ),
@@ -518,6 +517,7 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
     return Container(
       width: width,
       height: 20,
+      padding: EdgeInsets.all(5),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: primary.shade700),
       child: Center(
         child: Text(
@@ -529,4 +529,11 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
       ),
     );
   }
+
+
+
+
+
+
+
 }

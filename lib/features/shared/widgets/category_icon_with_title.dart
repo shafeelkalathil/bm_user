@@ -22,9 +22,11 @@ class CategoryIconWithTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: ShadowContainer(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 18),
         child: Column(
           children: [
+
             SvgPicture.asset(
               icon,
               height: 36,

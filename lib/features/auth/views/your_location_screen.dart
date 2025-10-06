@@ -127,8 +127,6 @@ class _YourLocationScreenState extends State<YourLocationScreen> {
 
     final success = await locationProvider.getCurrentLocation();
     storage.setBool('isLoggedIn', true);
-    print(storage.get('isLoggedIn'));
-    print('object');
 
     if (success) {
       CustomToast.showSuccess(

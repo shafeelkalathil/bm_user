@@ -23,6 +23,7 @@ class ElevatedIconBox extends StatelessWidget {
       child: Container(
         width: 60,
         height: 55,
+        padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
           color: primary.shade300,
           borderRadius: BorderRadius.circular(16),

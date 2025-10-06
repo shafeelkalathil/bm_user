@@ -3,7 +3,9 @@ import 'package:bm_user/features/cart/view/cart_history.dart';
 import 'package:bm_user/features/cart/view/view_cart_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../core/constants/app_string_constants.dart';
 import '../../../core/constants/asset_constants.dart';
@@ -15,14 +17,14 @@ import '../../categories/views/categories.dart';
 import '../../home/views/home.dart';
 import '../../offers/views/offers_screen.dart';
 
-class BottomNavBar extends StatefulWidget {
+class BottomNavBar extends ConsumerStatefulWidget {
   const BottomNavBar({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  ConsumerState<BottomNavBar> createState() => _BottomNavBarState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _BottomNavBarState extends ConsumerState<BottomNavBar> {
   int _selectedIndex = 0;
 
   final PageController _pageController = PageController();
@@ -154,7 +156,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
               const HomeScreen(),
               const CategoryScreen(),
               const OfferScreen(),
-              cartProducts.isNotEmpty ? ViewCartScreen() : CartHistory(),
+              ref.watch(cartProducts).isNotEmpty ? ViewCartScreen() : CartHistory(),
             ],
           ),
         ),

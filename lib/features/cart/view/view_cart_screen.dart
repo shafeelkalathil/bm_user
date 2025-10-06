@@ -29,6 +29,7 @@ class ViewCartScreen extends ConsumerStatefulWidget {
 
 class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
 
+
   final amountToPay  = StateProvider((ref) => 0.0);
 
 

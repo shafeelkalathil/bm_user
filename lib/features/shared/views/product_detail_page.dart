@@ -48,7 +48,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   _buildImageSlider(),
                   _buildProductInfo(),
                   const SizedBox(height: 15),
-                  if (widget.product.hasMultipleOptions) _buildVariantSelector(),
+                  if (widget.product.hasMultipleOptions?? false?? false) _buildVariantSelector(),
                   const SizedBox(height: 15),
                   _buildProductDescription(),
                   const SizedBox(height: 100), // Space for bottom button
@@ -213,7 +213,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         const SizedBox(height: 12),
 
-        if (!widget.product.hasMultipleOptions) ...[
+        if (!widget.product.hasMultipleOptions!?? false) ...[
           // Main row with price and action button/quantity selector
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -256,7 +256,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ],
 
         // Handle multiple options case
-        // if (widget.product.hasMultipleOptions) ...[
+        // if (widget.product.hasMultipleOptions?? false) ...[
         //   Row(
         //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
         //     children: [
@@ -366,7 +366,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   }
 
   Widget _buildVariantSelector() {
-    if (!widget.product.hasMultipleOptions) return const SizedBox.shrink();
+    if (!widget.product.hasMultipleOptions!?? false) return const SizedBox.shrink();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

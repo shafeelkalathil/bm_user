@@ -25,7 +25,7 @@ class ElevatedBox extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 5,
+          // spacing: 5,
           children: [
             Text(
               title,

@@ -1,5 +1,3 @@
-import 'package:bm_user/features/home/controller/home_controller.dart';
-import 'package:bm_user/features/home/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -29,7 +27,7 @@ class MyApp extends ConsumerWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: AppTheme.lightTheme,
-          home: SplashScreen(),
+          home: const SplashScreen(),
           builder: FToastBuilder(),
         ),
       ),

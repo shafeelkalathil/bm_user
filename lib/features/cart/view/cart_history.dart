@@ -36,7 +36,10 @@ class _CartHistoryState extends State<CartHistory> {
       child: Scaffold(
         appBar: CustomAppBar(
           title: 'Cart',
-          trailing: Padding(padding: const EdgeInsets.all(10), child: SvgPicture.asset(AssetConstants.search)),
+          trailing: Padding(
+            padding: const EdgeInsets.all(10),
+            child: SvgPicture.asset(AssetConstants.search),
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(13),
@@ -46,19 +49,31 @@ class _CartHistoryState extends State<CartHistory> {
                 Row(
                   children: [
                     Expanded(
-                      child: Text('HISTORY', style: textBold2XContent14.copyWith(color: primary.shade50)),
+                      child: Text(
+                        'HISTORY',
+                        style: textBold2XContent14.copyWith(color: primary.shade50),
+                      ),
                     ),
                     Expanded(
-                      child: Text('SCHEDULED', style: textBold2XContent14.copyWith(color: primary.shade50)),
+                      child: Text(
+                        'SCHEDULED',
+                        style: textBold2XContent14.copyWith(color: primary.shade50),
+                      ),
                     ),
                     Expanded(
                       child: Padding(
                         padding: const EdgeInsets.only(left: 15),
-                        child: Text('DRAFT', style: textBold2XContent14.copyWith(color: primary.shade50)),
+                        child: Text(
+                          'DRAFT',
+                          style: textBold2XContent14.copyWith(color: primary.shade50),
+                        ),
                       ),
                     ),
                     Expanded(
-                      child: Text('CANCELLED', style: textBold2XContent14.copyWith(color: primary.shade50)),
+                      child: Text(
+                        'CANCELLED',
+                        style: textBold2XContent14.copyWith(color: primary.shade50),
+                      ),
                     ),
                   ],
                 ),
@@ -120,13 +135,22 @@ class _CartHistoryState extends State<CartHistory> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text('KFC', style: textBoldContent18.copyWith(color: primary.shade200)),
-                                  Text('Delivered', style: textBoldContent18.copyWith(color: primary.shade200)),
+                                  Text(
+                                    'KFC',
+                                    style: textBoldContent18.copyWith(color: primary.shade200),
+                                  ),
+                                  Text(
+                                    'Delivered',
+                                    style: textBoldContent18.copyWith(color: primary.shade200),
+                                  ),
                                 ],
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 6),
-                                child: Text('Kottakkal', style: textBoldContent14.copyWith(color: primary.shade200)),
+                                child: Text(
+                                  'Kottakkal',
+                                  style: textBoldContent14.copyWith(color: primary.shade200),
+                                ),
                               ),
                               Padding(
                                 padding: const EdgeInsets.only(top: 13),
@@ -136,19 +160,39 @@ class _CartHistoryState extends State<CartHistory> {
                                     SizedBox(
                                       child: Row(
                                         children: [
-                                          Text('₹525', style: textSemiContent14.copyWith(color: primary.shade500)),
-                                          Padding(
-                                            padding: const EdgeInsets.only(left: 5),
-                                            child: Text('MRP', style: textBoldContent14.copyWith(color: primary.shade100)),
+                                          Text(
+                                            '₹525',
+                                            style: textSemiContent14.copyWith(
+                                              color: primary.shade500,
+                                            ),
                                           ),
                                           Padding(
                                             padding: const EdgeInsets.only(left: 5),
-                                            child: Text('₹525;', style: textBoldContent14.copyWith(color: primary.shade100)),
+                                            child: Text(
+                                              'MRP',
+                                              style: textBoldContent14.copyWith(
+                                                color: primary.shade100,
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(left: 5),
+                                            child: Text(
+                                              '₹525;',
+                                              style: textBoldContent14.copyWith(
+                                                color: primary.shade100,
+                                              ),
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                    Text('Details', style: textSemiContent14.copyWith(color: primary.shade600)),
+                                    Text(
+                                      'Details',
+                                      style: textSemiContent14.copyWith(
+                                        color: primary.shade600,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -157,16 +201,17 @@ class _CartHistoryState extends State<CartHistory> {
                                 child: SizedBox(
                                   width: double.infinity,
                                   child: DecoratedBox(
-                                      decoration: ShapeDecoration(shape: DottedBorder(
+                                    decoration: ShapeDecoration(
+                                      shape: DottedBorder(
                                         dotShape: BorderDotShape.square,
                                         color: primary.shade100,
-                                        dotSize:2,
+                                        dotSize: 2,
                                         dotSpacing: 5,
-
-                                      ))),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-
 
                               Padding(
                                 padding: const EdgeInsets.only(top: 15),
@@ -191,12 +236,22 @@ class _CartHistoryState extends State<CartHistory> {
                                     ShadowContainer(
                                       borderRadius: 28,
                                       padding: EdgeInsets.all(20),
-                                      child: Text('Re Order', style: textBoldContent18.copyWith(color: primary.shade200)),
+                                      child: Text(
+                                        'Re Order',
+                                        style: textBoldContent18.copyWith(
+                                          color: primary.shade200,
+                                        ),
+                                      ),
                                     ),
                                     ShadowContainer(
                                       borderRadius: 28,
                                       padding: EdgeInsets.all(20),
-                                      child: Text('Rate Food', style: textBoldContent18.copyWith(color: primary.shade200)),
+                                      child: Text(
+                                        'Rate Food',
+                                        style: textBoldContent18.copyWith(
+                                          color: primary.shade200,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -218,7 +273,13 @@ class _CartHistoryState extends State<CartHistory> {
 }
 
 class CartSectionElevatedButton extends StatelessWidget {
-  const CartSectionElevatedButton({super.key, this.color, required this.textstyle, required this.text, this.borderRadius = 15});
+  const CartSectionElevatedButton({
+    super.key,
+    this.color,
+    required this.textstyle,
+    required this.text,
+    this.borderRadius = 15,
+  });
 
   final Color? color;
   final TextStyle textstyle;
@@ -230,7 +291,9 @@ class CartSectionElevatedButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(borderRadius!)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadiusGeometry.circular(borderRadius!),
+        ),
       ),
       onPressed: () {},
       child: Text(text, style: textstyle),

@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import '../../../core/constants/asset_constants.dart';
 import '../../../core/constants/color_constants.dart';
 import '../../../core/utils/styles/text_style.dart';
@@ -221,24 +220,41 @@ class _ProductCardWithAddButtonState extends ConsumerState<ProductCardWithAddBut
                                     );
                                   } else {
                                     if (cartProducts.isNotEmpty) {
-                                      cartProducts.map((e) {
-                                        if (e.productName == widget.singleProduct.name &&
-                                            e.size == widget.singleProduct.variants.first.size) {
-                                          e.copyWith(quantity: e.quantity + 1);
-                                        } else {
-                                          cartProducts.add(
-                                            CartModel(
-                                              productImage: widget.singleProduct.imageUrl,
-                                              productName: widget.singleProduct.name,
-                                              productPrice: widget.singleProduct.variants.first.price,
-                                              productDescription: widget.singleProduct.description,
-                                              unit: widget.singleProduct.variants.first.unit,
-                                              size: widget.singleProduct.variants.first.size,
-                                              quantity: 1,
-                                            ),
-                                          );
-                                        }
-                                      }).toList();
+                                      var addedProduct = cartProducts.indexWhere(
+                                        (e) =>
+                                            e.productName == widget.singleProduct.name &&
+                                            e.size == widget.singleProduct.variants.first.size,
+                                      );
+                                      if (addedProduct != -1) {
+                                        var updated = cartProducts[addedProduct].copyWith(
+                                          quantity: cartProducts[addedProduct].quantity + 1,
+                                        );
+                                        cartProducts[addedProduct] = updated;
+
+
+
+
+                                        //-- updating the demo product quantity
+                                        var product = demoProducts.indexWhere((element) {
+                                                                                  return element.name == widget.singleProduct.name;
+                                                                                },);
+                                        var updateDemoProduct = demoProducts[product].copyWith(
+                                            quantity: demoProducts[product].quantity - updated.quantity);
+                                        demoProducts[product] = updateDemoProduct;
+
+                                      }else{
+                                        cartProducts.add(
+                                          CartModel(
+                                            productImage: widget.singleProduct.imageUrl,
+                                            productName: widget.singleProduct.name,
+                                            productPrice: widget.singleProduct.variants.first.price,
+                                            productDescription: widget.singleProduct.description,
+                                            unit: widget.singleProduct.variants.first.unit,
+                                            size: widget.singleProduct.variants.first.size,
+                                            quantity: 1,
+                                          ),
+                                        );
+                                      }
                                     } else {
                                       cartProducts.add(
                                         CartModel(
@@ -418,15 +434,34 @@ class _ProductCardWithAddButtonState extends ConsumerState<ProductCardWithAddBut
                       ),
                     );
                   } else {
-                    final indexx = cartProducts.indexWhere(
+                    final addedProduct = cartProducts.indexWhere(
                       (element) => element.productName == widget.singleProduct.name && element.size == variants[index].size,
                     );
-                    if (indexx != -1) {
-                      var updated = cartProducts[index].copyWith(quantity: cartProducts[index].quantity + 1);
-                      cartProducts[index] = updated;
-                    } else {
-                      print('not same');
+                    if (addedProduct != -1) {
+                      var updated = cartProducts[addedProduct].copyWith(quantity: cartProducts[addedProduct].quantity + 1);
+                      cartProducts[addedProduct] = updated;
 
+                      //-- updating the demo product quantity
+
+                      var product = demoProducts.indexWhere((element) {
+                        return element.name == widget.singleProduct.name;
+                      },);
+                      var updateDemoProduct =   demoProducts[product].copyWith(quantity: demoProducts[product].quantity - 1);
+                      demoProducts[product] = updateDemoProduct;
+                      print(demoProducts[product].quantity);
+
+
+                      for (ProductModel a in demoProducts) {
+                        ref.watch(grossItemQuantity.notifier).state = 0;
+                        print('s');
+                          if (widget.singleProduct.variants.length > 1) {
+                            ref.watch(grossItemQuantity.notifier).state += a.quantity;
+                          } else {
+                            ref.watch(grossItemQuantity.notifier).state += a.quantity;
+                          }
+
+                      }
+                    } else {
                       cartProducts.add(
                         CartModel(
                           productImage: widget.singleProduct.imageUrl,
@@ -687,12 +722,11 @@ class _ProductCardState extends ConsumerState<ProductCard> {
             onPressed: () {
               if (ref.watch(addingToCartQuantity) > 0) {
                 ref.watch(addingToCartQuantity.notifier).state--;
-                cartProducts.map((e) {
-                  if (e.productName == name && e.size == widget.productVariant.size) {
-                    e.quantity = e.quantity - 1;
-                    print(e.quantity);
-                  }
-                }).toList();
+                var addedProduct = cartProducts.indexWhere((e) => e.productName == name && e.size == widget.productVariant.size);
+                if (addedProduct != -1) {
+                  var updated = cartProducts[addedProduct].copyWith(quantity: cartProducts[addedProduct].quantity - 1);
+                  cartProducts[addedProduct] = updated;
+                }
               } else {
                 cartProducts = [];
               }
@@ -713,11 +747,11 @@ class _ProductCardState extends ConsumerState<ProductCard> {
             onPressed: () {
               if (productVariant.quantity > ref.watch(addingToCartQuantity)) {
                 ref.watch(addingToCartQuantity.notifier).state++;
-                cartProducts.map((e) {
-                  if (e.productName == name && e.size == widget.productVariant.size) {
-                    e.quantity = e.quantity + 1;
-                  }
-                }).toList();
+                var addedProduct = cartProducts.indexWhere((e) => e.productName == name && e.size == widget.productVariant.size);
+                if (addedProduct != -1) {
+                  var updated = cartProducts[addedProduct].copyWith(quantity: cartProducts[addedProduct].quantity + 1);
+                  cartProducts[addedProduct] = updated;
+                }
               }
 
               widget.onQuantityChanged?.call(ref.watch(addingToCartQuantity));

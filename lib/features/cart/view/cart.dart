@@ -1,7 +1,4 @@
-import 'package:bm_user/core/common_variables.dart';
 import 'package:bm_user/core/utils/extensions/size_extension.dart';
-import 'package:bm_user/features/shared/widgets/custom_elevated_button.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../core/constants/asset_constants.dart';

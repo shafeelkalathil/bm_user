@@ -29,7 +29,7 @@ class _CartHistoryState extends ConsumerState<CartHistory> {
           title: 'Cart',
           trailing: Padding(padding: const EdgeInsets.all(10), child: SvgPicture.asset(AssetConstants.search)),
         ),
-        body: Padding(
+        body:ref.watch(cartHistory).isEmpty ? Center(child: Text("No Cart History Found")): Padding(
           padding: const EdgeInsets.all(13),
           child: SingleChildScrollView(
             child: Column(

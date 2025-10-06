@@ -61,6 +61,18 @@ class AssetConstants {
   static String sale50 = 'assets/images/sale50%.png';
   static String brandOfDay = 'assets/images/brand_of_day.png';
   static String popularBrand = 'assets/images/popular_brand.png';
+  static String editIcon = 'assets/icons/edit_Icon.svg';
+  static String deleteIcon = 'assets/icons/delete_Icon.svg';
+  static String googlePayIcon = 'assets/icons/googel_pay_icon.svg';
+  static String paytmIcon = 'assets/icons/paytm_Icon.svg';
+  static String phonePeIcon = 'assets/icons/phonePe.svg';
+  static String languageIcon = 'assets/icons/language_Icon.svg';
+  static String whatsAppIcon = 'assets/icons/whatsApp_Icon.svg';
+  static String amazonPayIcon = 'assets/icons/amazon_Icon.svg';
+  static String cardIcon = 'assets/icons/card_Icon.svg';
+  static String tickIcon = 'assets/icons/tick_Icon.svg';
+  static String bankIcon = 'assets/icons/bank_Icon.svg';
+  static String payLaterIcon = 'assets/icons/pay_later.svg';
   static String shapedLoginOrSignup =
       'assets/images/shaped_login_or_signup.svg';
 }

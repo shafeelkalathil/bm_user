@@ -73,6 +73,13 @@ class AssetConstants {
   static String tickIcon = 'assets/icons/tick_Icon.svg';
   static String bankIcon = 'assets/icons/bank_Icon.svg';
   static String payLaterIcon = 'assets/icons/pay_later.svg';
+  static String starIcon = 'assets/images/star.svg';
+  static String femaleImage = 'assets/images/female_person.svg';
+  static String maleImage = 'assets/images/male_person.svg';
+  static String referBackgroundImage = 'assets/images/refer_background.svg';
+  static String chatWithUSImage = 'assets/images/chat_with_us.svg';
+  static String callIcon = 'assets/images/call_Icon.svg';
+  static String sendIcon = 'assets/images/send_Icon.svg';
   static String shapedLoginOrSignup =
       'assets/images/shaped_login_or_signup.svg';
 }

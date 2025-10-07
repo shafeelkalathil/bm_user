@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:provider/provider.dart';
+import 'package:provider/provider.dart' hide Consumer;
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 import '../../../core/constants/app_string_constants.dart';
 import '../../../core/constants/asset_constants.dart';
@@ -149,15 +149,19 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
 
         /// Main content using PageView to switch between tabs.
         body: SafeArea(
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            children: [
-              const HomeScreen(),
-              const CategoryScreen(),
-              const OfferScreen(),
-             ref.watch(cartHistory).isEmpty ? CartScreen() : ref.watch(cartProducts).isNotEmpty ? ViewCartScreen() : CartHistory(),
-            ],
+          child: Consumer(
+            builder: (context,ref, child) {
+              return PageView(
+                controller: _pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  const HomeScreen(),
+                  const CategoryScreen(),
+                  const OfferScreen(),
+                  ref.watch(cartProducts).isNotEmpty ? ViewCartScreen() : ref.watch(cartHistory).isEmpty ? CartScreen()  : CartHistory(),
+                ],
+              );
+            }
           ),
         ),
       ),

@@ -319,9 +319,22 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
                               children: [
                                 Expanded(child: QuantityControls(productVariant: ref.watch(cartProducts)[index], name:ref.watch(cartProducts)[index].productName )),
                                 Expanded(
-                                  child: Text(
-                                    '₹${ref.watch(cartProducts)[index].productPrice}',
-                                    style: textBoldContent16.copyWith(color: primary.shade500),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        '₹${ref.watch(cartProducts)[index].productPrice}',
+                                        style: textBoldContent14.copyWith(color: primary.shade500),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 5),
+                                          child: Text(
+                                            'MRP ₹${ref.watch(cartProducts)[index].productPrice}',softWrap: false,
+                                            style: textBoldContent14.copyWith(color: primary.shade50),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -501,8 +514,11 @@ class _ViewCartScreenState extends ConsumerState<ViewCartScreen> {
                 price: ref.watch(amountToPay).toString(),
                 sliderColor: primary.shade300,
                 onSlideCompleted: () {
-                  ref.read(cartHistory).addAll(ref.read(cartProducts));
+                  ref.watch(cartHistory).addAll(ref.read(cartProducts));
                   ref.watch(cartProducts.notifier).state = [];
+
+                  print(ref.watch(cartHistory));
+                  print(ref.watch(cartProducts));
                   Navigator.push(context, MaterialPageRoute(builder: (_) => const OrderConfirmationScreen()));
                 },
               ),

@@ -21,12 +21,14 @@ class AddressScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
+
+                //-- showing the addressed tiles
                 SizedBox(
                   height: context.screenHeight * 0.85,
                   child: ListView.builder(
                     itemCount: 2,
                     itemBuilder: (context, index) {
-                     return _buildAddressCard(context: context);
+                      return _buildAddressCard(context: context);
                     },
                   ),
                 ),
@@ -37,15 +39,13 @@ class AddressScreen extends StatelessWidget {
       ),
     );
   }
+
+  //-- building address card
   Widget _buildAddressCard({required BuildContext context}) {
     return Container(
       margin: const EdgeInsets.only(top: 15),
       padding: EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        border: Border.all(),
-        borderRadius: BorderRadius.circular(20),
-      ),
+      decoration: BoxDecoration(color: Colors.grey[200], border: Border.all(), borderRadius: BorderRadius.circular(20)),
       child: Row(
         children: [
           Expanded(
@@ -53,41 +53,31 @@ class AddressScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Sirajudheen',
-                  style: textBold2XContent24.copyWith(color: primary.shade200),
-                  softWrap: false,
-                ),
-                Text(
-                  '+91 98959986',
-                  style: textSemiContent20.copyWith(color: primary.shade200),
-                  softWrap: false,
-                ),
+                //-- name
+                Text('Sirajudheen', style: textBold2XContent24.copyWith(color: primary.shade200), softWrap: false),
+
+                //-- phone number
+                Text('+91 98959986', style: textSemiContent20.copyWith(color: primary.shade200), softWrap: false),
                 SizedBox(height: context.screenHeight * 0.1),
-                Text(
-                  'Perumanna 1459,679556',
-                  style: textSemiContent20.copyWith(color: primary.shade200),
-                  softWrap: false,
-                ),
-                Text(
-                  'Kottakkal,Malappuram',
-                  style: textSemiContent20.copyWith(color: primary.shade200),
-                  softWrap: false,
-                ),
+                //-- address
+                Text('Perumanna 1459,679556', style: textSemiContent20.copyWith(color: primary.shade200), softWrap: false),
+
+                //-- place text
+                Text('Kottakkal,Malappuram', style: textSemiContent20.copyWith(color: primary.shade200), softWrap: false),
               ],
             ),
           ),
+
+          //-- edit and delete icon section
           Expanded(
             child: Column(
               children: [
                 Row(
                   children: [
+                    //-- edit Icon
                     Container(
                       padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: primary.shade300,
-                      ),
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color: primary.shade300),
 
                       child: SvgPicture.asset(
                         AssetConstants.editIcon,
@@ -95,6 +85,8 @@ class AddressScreen extends StatelessWidget {
                         color: primary.shade50,
                       ),
                     ),
+
+                    //-- delete Icon
                     CircleAvatar(
                       backgroundColor: primary.shade300,
                       child: SvgPicture.asset(

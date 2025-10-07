@@ -1,8 +1,12 @@
 import 'package:bm_user/core/constants/asset_constants.dart';
+import 'package:bm_user/features/profile/views/activity_and_history.dart';
 import 'package:bm_user/features/profile/views/address_screen.dart';
 import 'package:bm_user/features/profile/views/languages_screen.dart';
 import 'package:bm_user/features/profile/views/my_account.dart';
+import 'package:bm_user/features/profile/views/notification_and_chats_screen.dart';
 import 'package:bm_user/features/profile/views/payment_&_refund_screen.dart';
+import 'package:bm_user/features/profile/views/refer_page.dart';
+import 'package:bm_user/features/profile/views/support_page.dart';
 import 'package:bm_user/features/shared/widgets/custom_app_bar.dart';
 import 'package:bm_user/features/shared/widgets/shadow_container.dart';
 import 'package:flutter/material.dart';
@@ -69,20 +73,20 @@ class ProfileBody extends StatelessWidget {
       ),
       ProfileMenuItem(
         title: 'ACTIVITY & HISTORY',
-        onTap: () => _handleMenuTap(context, 'Activity & History'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ActivityAndHistory(),)),
 
       ),
       ProfileMenuItem(
         title: 'NOTIFICATION & CHATS',
-        onTap: () => _handleMenuTap(context, 'Notification & Chats'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationAndChatsScreen(),)),
       ),
       ProfileMenuItem(
         title: 'REFER A FRIEND',
-        onTap: () => _handleMenuTap(context, 'Refer a Friend'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => ReferPage(),)),
       ),
       ProfileMenuItem(
         title: 'SUPPORT',
-        onTap: () => _handleMenuTap(context, 'Support'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SupporScreen(),)),
       ),
     ];
 

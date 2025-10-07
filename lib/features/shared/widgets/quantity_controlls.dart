@@ -1,3 +1,4 @@
+import 'package:bm_user/core/utils/extensions/size_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -31,10 +32,11 @@ class _QuantityControlsState extends ConsumerState<QuantityControls> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // constraints: BoxConstraints(minHeight: 30),
+      constraints: BoxConstraints(minWidth: context.screenWidth * 0.25),
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(color: const Color(0xFF1A237E), borderRadius: BorderRadius.circular(20)),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.min,
         children: [
           //-- quantity minus button
@@ -132,7 +134,7 @@ class _QuantityControlsState extends ConsumerState<QuantityControls> {
       onTap: onPressed,
       child: Container(
         decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: Icon(icon, color: const Color(0xFF1A237E), size: 20),
+        child: Icon(icon, color: const Color(0xFF1A237E), size: context.screenHeight * 0.028),
       ),
     );
   }

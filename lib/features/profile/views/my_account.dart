@@ -1,8 +1,11 @@
+import 'package:bm_user/core/constants/asset_constants.dart';
 import 'package:bm_user/core/constants/color_constants.dart';
+import 'package:bm_user/core/utils/extensions/size_extension.dart';
 import 'package:bm_user/core/utils/styles/text_style.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class MyAccountScreen extends StatefulWidget {
   const MyAccountScreen({super.key});
@@ -153,28 +156,31 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           },
         ),
         const SizedBox(height: 16),
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: _buildDropdownField(
-                label: 'Gender',
-                value: _selectedGender,
-                items: _genderOptions,
-                onChanged: (value) => setState(() => _selectedGender = value),
+        SizedBox(
+          width: double.infinity,
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: _buildDropdownField(
+                  label: 'Gender',
+                  value: _selectedGender,
+                  items: _genderOptions,
+                  onChanged: (value) => setState(() => _selectedGender = value),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              flex: 1,
-              child: _buildDropdownField(
-                label: 'Marital Status',
-                value: _selectedMaritalStatus,
-                items: _maritalStatusOptions,
-                onChanged: (value) => setState(() => _selectedMaritalStatus = value),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 1,
+                child: _buildDropdownField(
+                  label: 'Marital Status',
+                  value: _selectedMaritalStatus,
+                  items: _maritalStatusOptions,
+                  onChanged: (value) => setState(() => _selectedMaritalStatus = value),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         const SizedBox(height: 16),
         _buildDateOfBirthSection(),
@@ -229,79 +235,70 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           validator: validator,
           decoration: InputDecoration(
             filled: true,
-            fillColor: primary.shade400,
+            fillColor:Colors.grey.shade100,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+                borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.blue),
+              borderSide: BorderSide.none,
             ),
             contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+
           ),
         ),
       ],
     );
   }
 
+
+  //-- gender and marital status dropdown
   Widget _buildDropdownField({
     required String label,
     required String? value,
     required List<String> items,
     required Function(String?) onChanged,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Text(
-        //   label,
-        //   style: TextStyle(
-        //     fontSize: 14,
-        //     color: Colors.grey[600],
-        //     fontWeight: FontWeight.w500,
-        //   ),
-        // ),
-        const SizedBox(height: 8),
-        DropdownButton2<String>(
-          value: value,
-          underline: SizedBox(),
-          onChanged: onChanged,
-          hint: Text(label,style: textSemiContent14,),
-          buttonStyleData: ButtonStyleData(
-            padding: const EdgeInsets.only(left: 14, right: 14),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: Colors.black26),
-              color: primary.shade400,
+    return Expanded(
+      child: DropdownButton2<String>(
+            value: value,
+            underline: SizedBox(),
+            onChanged: onChanged,
+            hint: Text(label,style: textSemiContent14,),
+            buttonStyleData: ButtonStyleData(
+              padding: EdgeInsets.symmetric(horizontal:10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.transparent),
+                color: Colors.grey.shade100,
+              ),
+              width:200,
             ),
-            elevation: 2,
+            dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
+            ),
+            iconStyleData: const IconStyleData(icon: Icon(Icons.keyboard_arrow_down_outlined,size: 40,)),
+            items: items.map((String item) {
+              return DropdownMenuItem<String>(value: item, child: Text(item));
+            }).toList(),
           ),
-          dropdownStyleData: DropdownStyleData(
-            maxHeight: 200,
-            width: 200,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
-          ),
-          iconStyleData: const IconStyleData(icon: Icon(Icons.arrow_drop_down_outlined)),
-          items: items.map((String item) {
-            return DropdownMenuItem<String>(value: item, child: Text(item));
-          }).toList(),
-        ),
-      ],
     );
   }
 
+
+  //-- date of birth dropdown
   Widget _buildDateOfBirthSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Date of Birth',
-          style: TextStyle(fontSize: 14, color: Colors.grey[600], fontWeight: FontWeight.w500),
+          style: textSemiContent20.copyWith(color: primary.shade200),
         ),
         const SizedBox(height: 8),
         Row(
@@ -329,7 +326,10 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 label: 'Year',
                 value: _selectedYear,
                 items: List.generate(100, (index) => DateTime.now().year - index),
-                onChanged: (value) => setState(() => _selectedYear = value!),
+                onChanged: (value) {
+                  setState(() => _selectedYear = value!);
+
+                },
               ),
             ),
           ],
@@ -343,35 +343,32 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     required int value,
     required List<int> items,
     required Function(int?) onChanged,
-  }) {
-    return DropdownButtonFormField<int>(
-      value: value,
-      onChanged: onChanged,
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: primary.shade400,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: Colors.grey[300]!),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.blue),
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-      ),
-      hint: Text('Day'),
 
-      items: items.map((int item) {
-        return DropdownMenuItem<int>(
-          value: item,
-          child: Text(item.toString(), style: const TextStyle(fontSize: 14)),
-        );
-      }).toList(),
+  }) {
+    return Expanded(
+      child: DropdownButton2<int>(
+        value: value,
+        underline: SizedBox(),
+        onChanged: onChanged,
+        hint: Text(label,style: textSemiContent14,),
+        buttonStyleData: ButtonStyleData(
+            padding: EdgeInsets.symmetric(horizontal:10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.transparent),
+              color: Colors.grey.shade100,
+            ),
+            width:200
+        ),
+        dropdownStyleData: DropdownStyleData(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
+        ),
+        iconStyleData:IconStyleData(icon:value.toString().isEmpty ? SizedBox():SvgPicture.asset(AssetConstants.editIcon,height: 20,)),
+        items: items.map((item) {
+          return DropdownMenuItem(value: item, child: Text(item.toString()));
+        }).toList(),
+
+      ),
     );
   }
 

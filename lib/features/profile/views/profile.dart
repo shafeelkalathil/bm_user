@@ -1,5 +1,8 @@
 import 'package:bm_user/core/constants/asset_constants.dart';
+import 'package:bm_user/features/profile/views/address_screen.dart';
+import 'package:bm_user/features/profile/views/languages_screen.dart';
 import 'package:bm_user/features/profile/views/my_account.dart';
+import 'package:bm_user/features/profile/views/payment_&_refund_screen.dart';
 import 'package:bm_user/features/shared/widgets/custom_app_bar.dart';
 import 'package:bm_user/features/shared/widgets/shadow_container.dart';
 import 'package:flutter/material.dart';
@@ -54,19 +57,20 @@ class ProfileBody extends StatelessWidget {
       ),
       ProfileMenuItem(
         title: 'ADDRESS',
-        onTap: () => _handleMenuTap(context, 'Address'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => AddressScreen(),)),
       ),
       ProfileMenuItem(
         title: 'PAYMENTS & REFUND',
-        onTap: () => _handleMenuTap(context, 'Payments & Refund'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => PaymentAndRefundScreen(),)),
       ),
       ProfileMenuItem(
         title: 'LANGUAGE',
-        onTap: () => _handleMenuTap(context, 'Language'),
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => LanguagesScreen(),))
       ),
       ProfileMenuItem(
         title: 'ACTIVITY & HISTORY',
         onTap: () => _handleMenuTap(context, 'Activity & History'),
+
       ),
       ProfileMenuItem(
         title: 'NOTIFICATION & CHATS',

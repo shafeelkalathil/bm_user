@@ -1,3 +1,6 @@
+import 'package:bm_user/core/constants/color_constants.dart';
+import 'package:bm_user/core/utils/styles/text_style.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,20 +25,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   int _selectedMonth = 1;
   int _selectedYear = 2000;
 
-  final List<String> _genderOptions = ['Male', 'Female', 'Other'];
-  final List<String> _maritalStatusOptions = ['Single', 'Married', 'Divorced', 'Widowed'];
+  final List<String> _genderOptions = ['Gender', 'Male', 'Female', 'Other'];
+  final List<String> _maritalStatusOptions = ['Marital Status', 'Single', 'Married', 'Divorced', 'Widowed'];
 
-  List<String> _favoriteShops = [
-    'assets/images/shop1.jpg',
-    'assets/images/shop2.jpg',
-    'assets/images/shop3.jpg',
-  ];
+  List<String> _favoriteShops = ['assets/images/shop1.jpg', 'assets/images/shop2.jpg', 'assets/images/shop3.jpg'];
 
-  List<String> _favoriteItems = [
-    'assets/images/item1.jpg',
-    'assets/images/item2.jpg',
-    'assets/images/item3.jpg',
-  ];
+  List<String> _favoriteItems = ['assets/images/item1.jpg', 'assets/images/item2.jpg', 'assets/images/item3.jpg'];
 
   @override
   void dispose() {
@@ -50,7 +45,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[50],
+      backgroundColor: primary.shade300,
       appBar: _buildAppBar(),
       body: Form(
         key: _formKey,
@@ -86,11 +81,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       ),
       title: const Text(
         'My Account',
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-        ),
+        style: TextStyle(color: Colors.black, fontSize: 18, fontWeight: FontWeight.w600),
       ),
       systemOverlayStyle: SystemUiOverlayStyle.dark,
     );
@@ -108,11 +99,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 onBackgroundImageError: (exception, stackTrace) {
                   // Handle image error
                 },
-                child: const Icon(
-                  Icons.person,
-                  size: 50,
-                  color: Colors.grey,
-                ),
+                child: const Icon(Icons.person, size: 50, color: Colors.grey),
               ),
               Positioned(
                 bottom: 0,
@@ -122,22 +109,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black12,
-                        blurRadius: 4,
-                        offset: Offset(0, 2),
-                      ),
-                    ],
+                    boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
                   ),
                   child: InkWell(
                     onTap: _showImagePickerDialog,
                     borderRadius: BorderRadius.circular(12),
-                    child: const Icon(
-                      Icons.camera_alt,
-                      size: 20,
-                      color: Colors.grey,
-                    ),
+                    child: const Icon(Icons.camera_alt, size: 20, color: Colors.grey),
                   ),
                 ),
               ),
@@ -163,10 +140,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           },
         ),
         const SizedBox(height: 16),
-        _buildTextField(
-          controller: _middleNameController,
-          label: 'Middle name',
-        ),
+        _buildTextField(controller: _middleNameController, label: 'Middle name'),
         const SizedBox(height: 16),
         _buildTextField(
           controller: _lastNameController,
@@ -182,6 +156,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         Row(
           children: [
             Expanded(
+              flex: 1,
               child: _buildDropdownField(
                 label: 'Gender',
                 value: _selectedGender,
@@ -189,8 +164,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
                 onChanged: (value) => setState(() => _selectedGender = value),
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 8),
             Expanded(
+              flex: 1,
               child: _buildDropdownField(
                 label: 'Marital Status',
                 value: _selectedMaritalStatus,
@@ -245,14 +221,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(label, style: textSemiContent20.copyWith(color: primary.shade200)),
         const SizedBox(height: 8),
         TextFormField(
           controller: controller,
@@ -260,7 +229,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           validator: validator,
           decoration: InputDecoration(
             filled: true,
-            fillColor: Colors.white,
+            fillColor: primary.shade400,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(color: Colors.grey[300]!),
@@ -289,40 +258,37 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        // Text(
+        //   label,
+        //   style: TextStyle(
+        //     fontSize: 14,
+        //     color: Colors.grey[600],
+        //     fontWeight: FontWeight.w500,
+        //   ),
+        // ),
         const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
+        DropdownButton2<String>(
           value: value,
+          underline: SizedBox(),
           onChanged: onChanged,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+          hint: Text(label,style: textSemiContent14,),
+          buttonStyleData: ButtonStyleData(
+            padding: const EdgeInsets.only(left: 14, right: 14),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              border: Border.all(color: Colors.black26),
+              color: primary.shade400,
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.blue),
-            ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            elevation: 2,
           ),
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 200,
+            width: 200,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(14)),
+          ),
+          iconStyleData: const IconStyleData(icon: Icon(Icons.arrow_drop_down_outlined)),
           items: items.map((String item) {
-            return DropdownMenuItem<String>(
-              value: item,
-              child: Text(item),
-            );
+            return DropdownMenuItem<String>(value: item, child: Text(item));
           }).toList(),
         ),
       ],
@@ -335,11 +301,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       children: [
         Text(
           'Date of Birth',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
-          ),
+          style: TextStyle(fontSize: 14, color: Colors.grey[600], fontWeight: FontWeight.w500),
         ),
         const SizedBox(height: 8),
         Row(
@@ -387,7 +349,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       onChanged: onChanged,
       decoration: InputDecoration(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: primary.shade400,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: Colors.grey[300]!),
@@ -402,13 +364,12 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
       ),
+      hint: Text('Day'),
+
       items: items.map((int item) {
         return DropdownMenuItem<int>(
           value: item,
-          child: Text(
-            item.toString(),
-            style: const TextStyle(fontSize: 14),
-          ),
+          child: Text(item.toString(), style: const TextStyle(fontSize: 14)),
         );
       }).toList(),
     );
@@ -420,11 +381,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       children: [
         Text(
           'Favorite Shop',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey[700], fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -450,11 +407,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       children: [
         Text(
           'Favorite Item',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.grey[700],
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(fontSize: 16, color: Colors.grey[700], fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -479,10 +432,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
       width: 80,
       height: 80,
       margin: const EdgeInsets.only(right: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Colors.grey[200],
-      ),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(8), color: Colors.grey[200]),
       child: Stack(
         children: [
           ClipRRect(
@@ -495,11 +445,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
               errorBuilder: (context, error, stackTrace) {
                 return Container(
                   color: Colors.orange[100],
-                  child: Icon(
-                    Icons.store,
-                    size: 30,
-                    color: Colors.orange[300],
-                  ),
+                  child: Icon(Icons.store, size: 30, color: Colors.orange[300]),
                 );
               },
             ),
@@ -512,15 +458,8 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
               child: Container(
                 width: 20,
                 height: 20,
-                decoration: const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(
-                  Icons.close,
-                  size: 12,
-                  color: Colors.white,
-                ),
+                decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                child: const Icon(Icons.close, size: 12, color: Colors.white),
               ),
             ),
           ),
@@ -541,11 +480,7 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
           color: Colors.grey[200],
           border: Border.all(color: Colors.grey[400]!, style: BorderStyle.solid),
         ),
-        child: Icon(
-          Icons.add,
-          size: 30,
-          color: Colors.grey[600],
-        ),
+        child: Icon(Icons.add, size: 30, color: Colors.grey[600]),
       ),
     );
   }
@@ -558,17 +493,11 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.blue[600],
           padding: const EdgeInsets.symmetric(vertical: 16),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),
         child: const Text(
           'Save Changes',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.white),
         ),
       ),
     );
@@ -633,12 +562,9 @@ class _MyAccountScreenState extends State<MyAccountScreen> {
   void _saveProfile() {
     if (_formKey.currentState!.validate()) {
       // Handle save logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile updated successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Profile updated successfully!'), backgroundColor: Colors.green));
     }
   }
 }

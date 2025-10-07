@@ -30,6 +30,7 @@ dependencies:
   provider: ^6.1.5+1
   google_maps_flutter: ^2.13.1
   location: ^8.0.1
+  auto_size_text: ^3.0.0
   
   # state management
   riverpod: ^3.0.0
@@ -38,6 +39,7 @@ dependencies:
   # local storage
   shared_preferences: ^2.5.3
   widgets_easier: ^0.0.10
+  dropdown_button2: ^2.3.9
 
 dev_dependencies:
   flutter_test:

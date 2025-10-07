@@ -156,7 +156,7 @@ class _BottomNavBarState extends ConsumerState<BottomNavBar> {
               const HomeScreen(),
               const CategoryScreen(),
               const OfferScreen(),
-              ref.watch(cartProducts).isNotEmpty ? ViewCartScreen() : CartHistory(),
+             ref.watch(cartHistory).isEmpty ? CartScreen() : ref.watch(cartProducts).isNotEmpty ? ViewCartScreen() : CartHistory(),
             ],
           ),
         ),
